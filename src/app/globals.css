@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+/* ---- Design Tokens ---- */
+:root {
+  --bg-primary: #080808;
+  --bg-secondary: #101010;
+  --bg-tertiary: #181818;
+  --bg-panel: #0d0d0d;
+
+  --accent: #f96846;
+  --accent-dim: rgba(249, 104, 70, 0.12);
+  --accent-glow: rgba(249, 104, 70, 0.25);
+  --accent-border: rgba(249, 104, 70, 0.35);
+
+  --text-primary: #f0ece8;
+  --text-secondary: #8a847e;
+  --text-muted: #3d3a38;
+  --text-accent: #f96846;
+
+  --border: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.1);
+
+  --green: #3dcc7a;
+  --green-dim: rgba(61, 204, 122, 0.1);
+  --yellow: #e8b84b;
+  --yellow-dim: rgba(232, 184, 75, 0.1);
+  --red: #e05252;
+  --red-dim: rgba(224, 82, 82, 0.1);
+
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ---- Reset ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ---- Base ---- */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* Dot grid background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(249, 104, 70, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ---- Selection ---- */
+::selection {
+  background: rgba(249, 104, 70, 0.25);
+}
+
+/* ---- Focus ---- */
+*:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- Animations ---- */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes progress-stripe {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 40px 0;
+  }
+}
+
+@keyframes pulse-accent {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(249, 104, 70, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 12px 3px rgba(249, 104, 70, 0.35);
+  }
+}
+
+@keyframes cursor-blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---- Utility classes ---- */
+.animate-spin-slow {
+  animation: spin 1.4s linear infinite;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.3s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out both;
+}
+
+.progress-bar-active {
+  background-image: repeating-linear-gradient(60deg,
+      transparent,
+      transparent 8px,
+      rgba(255, 255, 255, 0.06) 8px,
+      rgba(255, 255, 255, 0.06) 16px);
+  background-size: 40px 40px;
+  animation: progress-stripe 1s linear infinite;
+}
+
+.interview-glow {
+  animation: pulse-accent 2.5s ease-in-out infinite;
+}
+
+/* ---- Table row hover ---- */
+.result-row {
+  position: relative;
+  transition: background 0.15s ease;
+}
+
+.result-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.15s ease;
+  transform-origin: center;
+}
+
+.result-row:hover::before {
+  transform: scaleY(1);
+}
+
+.result-row:hover {
+  background: rgba(249, 104, 70, 0.04) !important;
+}
+
+/* Unified cell padding - th and td must match exactly */
+.result-row > td,
+thead th {
+  padding: 11px 16px;
+}
+
+
+/* ---- Textarea cursor style ---- */
+textarea {
+  font-family: var(--font-mono);
+  caret-color: var(--accent);
+}

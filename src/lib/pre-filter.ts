@@ -1,7 +1,5 @@
 import { CandidateRow, JDCriteria } from "@/types";
 
-const MAX_PER_COHORT = 40;
-
 // Maps experience bucket string to approximate years
 // Actual CSV values: '<1', '1-3', '3-8', '8-10', '>10'
 const EXP_BUCKET_YEARS: Record<string, number> = {
@@ -22,12 +20,11 @@ const NO_CODE_VALUES = [
   "no coding",
 ];
 
-// Returns candidates that pass the pre-filter for a given JD
-// Caps at MAX_PER_COHORT per cohort, sorted by domain relevance
+// Returns candidates that pass the pre-filter for a given JD, sorted by domain relevance
 export function preFilter(
   candidates: CandidateRow[],
   criteria: JDCriteria
-): { passed: CandidateRow[]; total: number; cap_exceeded: boolean } {
+): { passed: CandidateRow[]; total: number } {
   const total = candidates.length;
   const passed: CandidateRow[] = [];
 
@@ -65,14 +62,5 @@ export function preFilter(
     return aMatch - bMatch;
   });
 
-  const cap_exceeded = passed.length > MAX_PER_COHORT;
-  const capped = passed.slice(0, MAX_PER_COHORT);
-
-  if (cap_exceeded) {
-    console.log(
-      `[pre-filter] Cap exceeded for cohort. ${passed.length} passed, keeping top ${MAX_PER_COHORT}.`
-    );
-  }
-
-  return { passed: capped, total, cap_exceeded };
+  return { passed, total };
 }

@@ -1,4 +1,4 @@
-import { JDCriteria } from "@/types";
+import { JDCriteria, ScoringRubric } from "@/types";
 
 export function buildJDParsePrompt(jdText: string): string {
   return `You are a recruitment assistant. Extract structured hiring criteria from the job description below.
@@ -27,14 +27,26 @@ ${jdText}
 
 export function buildScoringPrompt(
   criteria: JDCriteria,
+  rubric: ScoringRubric,
   candidateProfile: string,
   resumeText: string
 ): string {
   const resumeSection = resumeText
-    ? `Resume Text (extracted):\n${resumeText.slice(0, 3000)}`
+    ? `Resume Text (extracted):\n${resumeText.slice(0, 6000)}`
     : "Resume: Not available";
 
-  return `You are a senior technical recruiter scoring a candidate for a job.
+  const dimensionLines = rubric.dimensions
+    .map(
+      (d, i) =>
+        `Dimension ${i + 1}: ${d.name} (weight: ${d.weight})\n` +
+        `  Description: ${d.description}\n` +
+        `  Score 1 (weak): ${d.anchors.score_1}\n` +
+        `  Score 3 (moderate): ${d.anchors.score_3}\n` +
+        `  Score 5 (strong): ${d.anchors.score_5}`
+    )
+    .join("\n\n");
+
+  return `You are a senior technical recruiter scoring a candidate using a structured rubric.
 
 Job Requirements:
 - Role: ${criteria.role_title}
@@ -44,29 +56,95 @@ Job Requirements:
 - Technical Role: ${criteria.is_technical_role}
 - Requires Prior Work Experience: ${criteria.requires_working_experience}
 
+Scoring Rubric:
+${dimensionLines}
+
 Candidate Profile (form data):
 ${candidateProfile}
 
 ${resumeSection}
 
-Score this candidate on a scale of 1-10 for this specific role.
-Return ONLY valid JSON:
+Instructions:
+1. For each rubric dimension, extract specific evidence from the resume/profile text.
+2. Score each dimension 1-5 using the anchor descriptions provided.
+3. Scoring floor rule: score 1 ONLY when there is explicit evidence of absence (e.g. candidate states they have never used a skill, or their entire background is unrelated). If evidence is simply absent or not mentioned, score 2 minimum - absence of data is not proof of inability.
+4. Do NOT compute overall_score - it will be calculated server-side.
+5. top_strengths and key_gaps must reference specific skills or facts from the resume, not generic observations.
+
+Return ONLY valid JSON with no markdown, no extra fields:
 {
-  "overall_score": number (1-10),
-  "recommendation": "Interview" | "Maybe" | "Reject",
-  "top_strengths": string[] (max 3, concise),
-  "key_gaps": string[] (max 3, concise),
-  "red_flags": string[] (max 2, only serious issues),
-  "justification": string (2-3 sentences max)
+  "dimension_scores": [
+    {
+      "dimension": "dimension name",
+      "evidence": "specific text or evidence found in resume/profile",
+      "score": 4,
+      "reasoning": "one sentence explaining the score"
+    }
+  ],
+  "overall_score": 0,
+  "recommendation": "TBD",
+  "top_strengths": ["max 3, must be specific facts from resume"],
+  "key_gaps": ["max 3, must reference specific missing skills or requirements"],
+  "red_flags": ["max 2, only serious verifiable issues"],
+  "justification": "2-3 sentences referencing specific evidence"
+}`;
 }
 
-Scoring guide:
-- 8-10: Strong match, clear Interview
-- 5-7: Partial match, Maybe
-- 1-4: Poor match, Reject
+export function buildRubricGenPrompt(criteria: JDCriteria, rawJDText: string): string {
+  const domainHint =
+    criteria.required_domain === "design"
+      ? "This is a creative/design role. Prioritize dimensions like visual background, creative tool familiarity, portfolio quality, and aesthetic sensibility."
+      : criteria.is_technical_role
+      ? "This is a technical role. Prioritize dimensions like specific skills match, technical depth, system design ability, and engineering experience."
+      : "This is a hybrid role. Balance technical and non-technical dimensions appropriately.";
 
-No markdown, no extra fields.`;
+  return `You are a senior technical recruiter building a scoring rubric for hiring.
+
+Role: ${criteria.role_title}
+Domain: ${criteria.required_domain}
+Required Skills: ${criteria.required_skills.join(", ")}
+Min Experience: ${criteria.min_years_experience} years
+Technical Role: ${criteria.is_technical_role}
+
+${domainHint}
+
+Full Job Description:
+---
+${rawJDText.slice(0, 2000)}
+---
+
+Generate 4-5 scoring dimensions for evaluating candidates for this specific role.
+
+Rules:
+- Each dimension must be directly relevant to THIS role, not generic
+- Anchors (score_1, score_3, score_5) must reference specific skills, tools, or requirements from the JD
+- Weights must be decimals that sum to exactly 1.0
+- No generic anchors like "poor", "average", "excellent" - be concrete
+- ONLY include dimensions that can be objectively evaluated from a resume or written profile
+- FORBIDDEN dimensions: "adaptability", "learning mindset", "passion", "collaboration", "communication", "culture fit", "attitude" - these cannot be verified from a resume
+- ALLOWED dimensions: specific technical skills, years of experience, domain knowledge, tool/framework proficiency, system design evidence, project complexity
+- Return ONLY valid JSON, no markdown, no explanation
+
+Required JSON schema:
+{
+  "dimensions": [
+    {
+      "name": string,
+      "description": string,
+      "weight": number,
+      "anchors": {
+        "score_1": string,
+        "score_3": string,
+        "score_5": string
+      }
+    }
+  ],
+  "generated_for": "${criteria.role_title}"
+}`;
 }
+
+// ScoringRubric is imported for type reference in buildRubricGenPrompt return consumers
+export type { ScoringRubric };
 
 export function formatCandidateProfile(c: {
   name: string;

@@ -28,6 +28,13 @@ export interface CandidateRow {
   linkedin_url: string;
 }
 
+export interface DimensionScore {
+  dimension: string;
+  evidence: string;
+  score: number;
+  reasoning: string;
+}
+
 export interface ScoreResult {
   overall_score: number;
   recommendation: "Interview" | "Maybe" | "Reject" | string;
@@ -35,9 +42,28 @@ export interface ScoreResult {
   key_gaps: string[];
   red_flags: string[];
   justification: string;
+  dimension_scores?: DimensionScore[];
 }
 
 export interface ScoredCandidate extends CandidateRow {
   score_result: ScoreResult;
   error?: string;
+}
+
+export interface RubricAnchor {
+  score_1: string; // description of what a score of 1 looks like
+  score_3: string; // description of what a score of 3 looks like
+  score_5: string; // description of what a score of 5 looks like
+}
+
+export interface RubricDimension {
+  name: string;
+  description: string;
+  weight: number; // 0-1, all dimensions must sum to 1.0
+  anchors: RubricAnchor;
+}
+
+export interface ScoringRubric {
+  dimensions: RubricDimension[];
+  generated_for: string; // role_title
 }

@@ -1,6 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
+import JDConfirmModal from "@/components/JDConfirmModal";
+import RubricApprovalModal from "@/components/RubricApprovalModal";
+import { JDCriteria, ScoringRubric, DimensionScore } from "@/types";
 
 // ---- Types ----
 type Stage = "idle" | "parsing-jd" | "pre-filtering" | "scoring" | "done" | "error";
@@ -253,21 +256,33 @@ export default function Home() {
   const [error, setError] = useState("");
   const abortRef = useRef(false);
 
+  // Modal flow state
+  const [showJDConfirm, setShowJDConfirm] = useState(false);
+  const [parsedCriteria, setParsedCriteria] = useState<JDCriteria | null>(null);
+  const [confirmedCriteria, setConfirmedCriteria] = useState<JDCriteria | null>(null);
+  const [showRubricApproval, setShowRubricApproval] = useState(false);
+  const [approvedRubric, setApprovedRubric] = useState<ScoringRubric | null>(null);
+  const [isGeneratingRubric, setIsGeneratingRubric] = useState(false);
+
+  // Expandable rows state
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+
   const isRunning = ["parsing-jd", "pre-filtering", "scoring"].includes(progress.stage);
 
-  async function handleRun() {
+  // Step 1: Parse JD only, then show modal
+  async function handleParseJD() {
     if (!jdText.trim()) {
       setError("Paste a job description to get started.");
       return;
     }
     setError("");
+    setConfirmedCriteria(null);
+    setApprovedRubric(null);
     setResults([]);
     abortRef.current = false;
 
-    // Step 1: Parse JD
     setProgress({ stage: "parsing-jd", message: "Parsing job description...", scored: 0, total: 0, currentCandidate: "" });
 
-    let criteria: any;
     try {
       const res = await fetch("/api/parse-jd", {
         method: "POST",
@@ -275,15 +290,54 @@ export default function Home() {
         body: JSON.stringify({ jd_text: jdText }),
       });
       if (!res.ok) throw new Error(`JD parse failed: ${res.status}`);
-      criteria = await res.json();
+      const criteria: JDCriteria = await res.json();
       if (criteria.role_title) setRoleTitle(criteria.role_title);
+      setParsedCriteria(criteria);
+      setProgress((p) => ({ ...p, stage: "idle" }));
+      setShowJDConfirm(true);
     } catch (err) {
       setError(`Failed to parse JD: ${(err as Error).message}`);
       setProgress((p) => ({ ...p, stage: "error" }));
-      return;
     }
+  }
 
-    // Step 2: Load + pre-filter CSVs
+  // Modal 1 confirm: save criteria, generate rubric, show modal 2
+  async function handleCriteriaConfirm(edited: JDCriteria) {
+    setConfirmedCriteria(edited);
+    setShowJDConfirm(false);
+    setIsGeneratingRubric(true);
+
+    try {
+      const res = await fetch("/api/generate-rubric", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ criteria: edited, rawJDText: jdText }),
+      });
+      if (!res.ok) throw new Error(`Rubric generation failed: ${res.status}`);
+      const { rubric }: { rubric: ScoringRubric } = await res.json();
+      setIsGeneratingRubric(false);
+      setApprovedRubric(rubric); // temporarily stored; replaced when user approves edits
+      setShowRubricApproval(true);
+    } catch (err) {
+      setIsGeneratingRubric(false);
+      setError(`Failed to generate rubric: ${(err as Error).message}`);
+    }
+  }
+
+  // Modal 2 approve: save rubric, close modal
+  function handleRubricApprove(edited: ScoringRubric) {
+    setApprovedRubric(edited);
+    setShowRubricApproval(false);
+  }
+
+  // Screen candidates (unlocked after rubric approved)
+  async function handleScreenCandidates() {
+    if (!confirmedCriteria || !approvedRubric) return;
+    setError("");
+    setResults([]);
+    abortRef.current = false;
+
+    // Pre-filter
     setProgress({ stage: "pre-filtering", message: "Loading cohort data...", scored: 0, total: 0, currentCandidate: "" });
 
     let shortlist: any[] = [];
@@ -302,7 +356,7 @@ export default function Home() {
         if (!res.ok) throw new Error(`Failed to load ${cohort.id} data`);
         const csv = await res.text();
         const candidates = parseCohortCSV(csv, cohort.id);
-        const { passed } = preFilter(candidates, criteria);
+        const { passed } = preFilter(candidates, confirmedCriteria);
         shortlist.push(...passed);
       }
     } catch (err) {
@@ -317,10 +371,10 @@ export default function Home() {
       return;
     }
 
-    // Step 3: Score each candidate
+    // Score each candidate
     setProgress({
       stage: "scoring",
-      message: `Found ${shortlist.length} candidates to screen (capped at 40/cohort)`,
+      message: `Found ${shortlist.length} candidates to screen`,
       scored: 0,
       total: shortlist.length,
       currentCandidate: "",
@@ -340,10 +394,30 @@ export default function Home() {
       }));
 
       try {
+        // Step 1: fetch + parse resume (serverless, Node runtime, fast ~2-3s)
+        let resumeText = "";
+        if (candidate.resume_url) {
+          const resumeRes = await fetch("/api/fetch-resume", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ resume_url: candidate.resume_url }),
+          });
+          if (resumeRes.ok) {
+            const resumeData = await resumeRes.json();
+            resumeText = resumeData.text || "";
+          }
+        }
+
+        // Step 2: score with pre-parsed text (Edge runtime, 30s limit)
         const res = await fetch("/api/score-candidate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ jd_text: jdText, resume_url: candidate.resume_url, candidate }),
+          body: JSON.stringify({
+            criteria: confirmedCriteria,
+            resume_text: resumeText,
+            candidate,
+            rubric: approvedRubric,
+          }),
         });
         const scoreData = await res.json();
         scored.push({ ...candidate, score: scoreData });
@@ -374,6 +448,15 @@ export default function Home() {
       scored: shortlist.length,
       message: "Screening complete.",
     }));
+  }
+
+  function toggleExpandRow(key: string) {
+    setExpandedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
   }
 
   async function handleDownload() {
@@ -730,8 +813,8 @@ export default function Home() {
               </button>
             )}
             <button
-              onClick={handleRun}
-              disabled={isRunning || !jdText.trim()}
+              onClick={handleParseJD}
+              disabled={isRunning || progress.stage === "parsing-jd" || !jdText.trim()}
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "11px",
@@ -749,17 +832,106 @@ export default function Home() {
                 transition: "background 0.15s ease",
               }}
             >
+              {progress.stage === "parsing-jd" ? (
+                <>
+                  <Spinner />
+                  <span>PARSING JD...</span>
+                </>
+              ) : (
+                "PARSE JD"
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* ---- JD Parse Status + Screen Button ---- */}
+        {(confirmedCriteria || approvedRubric || isGeneratingRubric) && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "12px 16px",
+              borderRadius: "6px",
+              border: "1px solid var(--border-strong)",
+              background: "var(--bg-panel)",
+              marginBottom: "16px",
+              gap: "16px",
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+              {confirmedCriteria && (
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "11px",
+                    color: "var(--accent)",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  [OK] Criteria confirmed: {confirmedCriteria.role_title}
+                </span>
+              )}
+              {isGeneratingRubric && (
+                <span
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "11px",
+                    color: "var(--text-muted)",
+                  }}
+                >
+                  <Spinner /> Generating rubric...
+                </span>
+              )}
+              {approvedRubric && !isGeneratingRubric && (
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "11px",
+                    color: "var(--green)",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  [OK] Rubric approved: {approvedRubric.dimensions.length} dimensions
+                </span>
+              )}
+            </div>
+            <button
+              onClick={handleScreenCandidates}
+              disabled={!approvedRubric || isRunning}
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "11px",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                padding: "8px 20px",
+                borderRadius: "4px",
+                border: "none",
+                background: approvedRubric && !isRunning ? "var(--accent)" : "var(--bg-tertiary)",
+                color: approvedRubric && !isRunning ? "#000" : "var(--text-muted)",
+                cursor: approvedRubric && !isRunning ? "pointer" : "not-allowed",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                transition: "background 0.15s ease",
+                flexShrink: 0,
+              }}
+            >
               {isRunning ? (
                 <>
                   <Spinner />
                   <span>RUNNING...</span>
                 </>
               ) : (
-                "RUN SCREENING"
+                "SCREEN CANDIDATES"
               )}
             </button>
           </div>
-        </div>
+        )}
 
         {/* ---- Error ---- */}
         {error && (
@@ -1029,13 +1201,18 @@ export default function Home() {
                     </tr>
                   </thead>
                   <tbody>
-                    {sortedResults.map((c, i) => (
+                    {sortedResults.map((c, i) => {
+                      const rowKey = `${c.email}-${i}`;
+                      const isExpanded = expandedRows.has(rowKey);
+                      const dimScores: DimensionScore[] = c.score?.dimension_scores ?? [];
+                      return (<React.Fragment key={rowKey}>
                       <tr
-                        key={`${c.email}-${i}`}
                         className="result-row"
+                        onClick={() => dimScores.length > 0 && toggleExpandRow(rowKey)}
                         style={{
                           borderTop: "1px solid var(--border)",
                           background: i % 2 === 0 ? "var(--bg-panel)" : "var(--bg-secondary)",
+                          cursor: dimScores.length > 0 ? "pointer" : "default",
                         }}
                       >
                         {/* Rank */}
@@ -1171,10 +1348,107 @@ export default function Home() {
                             }}
                           >
                             {c.domain || "--"}
+                            {dimScores.length > 0 && (
+                              <span
+                                style={{
+                                  marginLeft: "6px",
+                                  fontFamily: "var(--font-mono)",
+                                  fontSize: "9px",
+                                  color: "var(--accent)",
+                                  letterSpacing: "0.06em",
+                                }}
+                              >
+                                {isExpanded ? "[-]" : "[+]"}
+                              </span>
+                            )}
                           </div>
                         </td>
                       </tr>
-                    ))}
+                      {isExpanded && dimScores.length > 0 && (
+                        <tr
+                          key={`${rowKey}-expand`}
+                          style={{
+                            background: "var(--bg-tertiary)",
+                            borderTop: "1px solid var(--border)",
+                          }}
+                        >
+                          <td colSpan={8} style={{ padding: "12px 16px" }}>
+                            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                              <thead>
+                                <tr>
+                                  {["Dimension", "Score", "Evidence"].map((h) => (
+                                    <th
+                                      key={h}
+                                      style={{
+                                        textAlign: "left",
+                                        fontFamily: "var(--font-mono)",
+                                        fontSize: "9px",
+                                        fontWeight: 600,
+                                        letterSpacing: "0.1em",
+                                        color: "var(--text-muted)",
+                                        textTransform: "uppercase",
+                                        paddingBottom: "6px",
+                                        borderBottom: "1px solid var(--border)",
+                                      }}
+                                    >
+                                      {h}
+                                    </th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {dimScores.map((ds, di) => (
+                                  <tr key={di}>
+                                    <td
+                                      style={{
+                                        fontFamily: "var(--font-mono)",
+                                        fontSize: "11px",
+                                        fontWeight: 600,
+                                        color: "var(--text-secondary)",
+                                        padding: "6px 8px 6px 0",
+                                        whiteSpace: "nowrap",
+                                        width: "160px",
+                                        borderBottom: "1px solid var(--border)",
+                                      }}
+                                    >
+                                      {ds.dimension}
+                                    </td>
+                                    <td
+                                      style={{
+                                        fontFamily: "var(--font-mono)",
+                                        fontSize: "12px",
+                                        fontWeight: 700,
+                                        color: ds.score >= 4 ? "var(--green)" : ds.score >= 3 ? "var(--yellow)" : "var(--red, #e05252)",
+                                        padding: "6px 16px 6px 0",
+                                        whiteSpace: "nowrap",
+                                        width: "50px",
+                                        fontVariantNumeric: "tabular-nums",
+                                        borderBottom: "1px solid var(--border)",
+                                      }}
+                                    >
+                                      {ds.score}/5
+                                    </td>
+                                    <td
+                                      style={{
+                                        fontFamily: "var(--font-mono)",
+                                        fontSize: "11px",
+                                        color: "var(--text-muted)",
+                                        padding: "6px 0",
+                                        lineHeight: 1.5,
+                                        borderBottom: "1px solid var(--border)",
+                                      }}
+                                    >
+                                      {ds.evidence || ds.reasoning || "--"}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      )}
+                      </React.Fragment>);
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -1212,11 +1486,35 @@ export default function Home() {
                 lineHeight: 1.6,
               }}
             >
-              Paste a JD above and click RUN SCREENING
+              Paste a JD above, click PARSE JD, confirm criteria and rubric, then screen.
             </p>
           </div>
         )}
       </main>
+
+      {/* ---- Modals ---- */}
+      {showJDConfirm && parsedCriteria && (
+        <JDConfirmModal
+          rawJD={jdText}
+          criteria={parsedCriteria}
+          onConfirm={handleCriteriaConfirm}
+          onCancel={() => {
+            setShowJDConfirm(false);
+            setProgress((p) => ({ ...p, stage: "idle" }));
+          }}
+        />
+      )}
+      {showRubricApproval && approvedRubric && (
+        <RubricApprovalModal
+          rubric={approvedRubric}
+          onApprove={handleRubricApprove}
+          onBack={() => {
+            setShowRubricApproval(false);
+            setApprovedRubric(null);
+            setShowJDConfirm(true);
+          }}
+        />
+      )}
 
       {/* ---- Footer ---- */}
       <footer

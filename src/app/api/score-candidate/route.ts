@@ -1,41 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import { parseJD, scoreCandidate } from "@/lib/llm";
-import { fetchResume } from "@/lib/pdf-fetcher";
-import { extractText } from "@/lib/pdf-parser";
-import { CandidateRow } from "@/types";
+import { scoreCandidate } from "@/lib/llm";
+import { CandidateRow, JDCriteria, ScoringRubric } from "@/types";
+
+// Edge runtime: 30s limit on Vercel free tier (vs 10s for serverless)
+// PDF fetch+parse is handled separately by /api/fetch-resume (Node runtime)
+export const runtime = "edge";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const candidate: CandidateRow = body.candidate;
-    // page.tsx sends jd_text (not pre-parsed criteria) + resume_url
-    const jdText: string = body.jd_text || "";
+    const criteria: JDCriteria = body.criteria;
+    const rubric: ScoringRubric = body.rubric;
+    const resumeText: string = body.resume_text || "";
 
-    if (!candidate || !jdText) {
-      return NextResponse.json({ error: "candidate and jd_text required" }, { status: 400 });
+    if (!candidate || !criteria) {
+      return NextResponse.json({ error: "candidate and criteria required" }, { status: 400 });
+    }
+    if (!rubric || !rubric.dimensions || rubric.dimensions.length === 0) {
+      return NextResponse.json({ error: "rubric with dimensions required" }, { status: 400 });
     }
 
-    // Parse criteria from jd_text
-    const criteria = await parseJD(jdText);
-
-    // Fetch and parse resume
-    let resumeText = "";
-    const resumeUrl = body.resume_url || candidate.resume_url || "";
-    if (resumeUrl) {
-      const fetched = await fetchResume(resumeUrl);
-      if (fetched) {
-        resumeText = await extractText(fetched.buffer, fetched.mimeType);
-      }
-    }
-
-    // Score and return result directly (page.tsx spreads this as c.score)
-    const scoreResult = await scoreCandidate(candidate, criteria, resumeText);
+    const scoreResult = await scoreCandidate(candidate, criteria, resumeText, rubric);
     return NextResponse.json(scoreResult);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[/api/score-candidate] Error:", message);
     return NextResponse.json(
-      { overall_score: 0, recommendation: "Error", top_strengths: [], key_gaps: [], red_flags: [message], justification: "" },
+      { overall_score: 0, recommendation: "Error", top_strengths: [], key_gaps: [], red_flags: [message], justification: "", dimension_scores: [] },
       { status: 500 }
     );
   }

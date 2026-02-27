@@ -17,8 +17,10 @@ export async function extractText(
 async function extractFromPdf(buffer: Buffer): Promise<string> {
   try {
     // pdf-parse must stay at v1.1.1 - v2 has class-based API
+    // MUST use internal path - the main entry point runs a self-test that
+    // looks for test/data/05-versions-space.pdf which does not exist at runtime
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const pdfParse = require("pdf-parse");
+    const pdfParse = require("pdf-parse/lib/pdf-parse.js");
     const data = await pdfParse(buffer);
     return (data.text || "").trim();
   } catch (err) {

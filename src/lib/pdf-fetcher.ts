@@ -29,8 +29,8 @@ export async function fetchResume(
   let fetchUrl = rawUrl.trim();
   let mimeType = "application/pdf";
 
-  // Tally private storage - these require auth, skip silently
-  if (fetchUrl.includes("storage.tally.so/private")) {
+  // Tally private storage - skip only if NO accessToken present (those require browser session)
+  if (fetchUrl.includes("storage.tally.so/private") && !fetchUrl.includes("accessToken=")) {
     return null;
   }
 
@@ -51,7 +51,7 @@ export async function fetchResume(
   try {
     const response = await fetch(fetchUrl, {
       redirect: "follow",
-      signal: AbortSignal.timeout(15000),
+      signal: AbortSignal.timeout(7000), // 7s: leaves 3s buffer inside 10s Vercel serverless limit
     });
 
     if (!response.ok) {

@@ -671,7 +671,7 @@ export default function Home() {
               position: "relative",
             }}
           >
-            Ranked Candidate From
+            Rank Candidates From
             <br />
             <span
               style={{

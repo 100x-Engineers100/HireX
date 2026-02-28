@@ -636,11 +636,11 @@ export default function Home() {
               top: "0px",
               right: "-2px",
               fontFamily: "var(--font-display)",
-              fontWeight: 600,
+              fontWeight: 800,
               fontSize: "clamp(80px, 15vw, 130px)",
               letterSpacing: "-0.06em",
-              color: "transparent",
-              WebkitTextStroke: "1px rgba(249,104,70,0.07)",
+              color: "rgba(249,104,70,0.04)",
+              WebkitTextStroke: "1.5px rgba(249,104,70,0.22)",
               pointerEvents: "none",
               userSelect: "none",
               lineHeight: 1,
@@ -649,7 +649,7 @@ export default function Home() {
               writingMode: "horizontal-tb",
             }}
           >
-            HIREX
+            HireX
             <br />
 
           </div>
@@ -671,7 +671,7 @@ export default function Home() {
               position: "relative",
             }}
           >
-            Ranked Candidate
+            Ranked Candidate From
             <br />
             <span
               style={{
@@ -680,7 +680,7 @@ export default function Home() {
                 display: "inline-block",
               }}
             >
-              Shortlist
+              Cohorts
               {/* Underline glow */}
               <span
                 style={{
@@ -700,8 +700,9 @@ export default function Home() {
           <p
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              color: "var(--text-secondary)",
+              fontSize: "13px",
+              fontWeight: 500,
+              color: "#c0bab4",
               lineHeight: 1.85,
               letterSpacing: "0.01em",
               maxWidth: "500px",

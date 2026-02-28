@@ -139,8 +139,9 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
               <p
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "10px",
-                  color: "var(--text-muted)",
+                  fontSize: "11px",
+                  fontWeight: 500,
+                  color: "var(--text-secondary)",
                   lineHeight: 1.5,
                   marginTop: "2px",
                 }}

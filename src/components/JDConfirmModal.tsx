@@ -2,6 +2,7 @@
 
 import { useState, useEffect, KeyboardEvent } from "react";
 import { JDCriteria } from "@/types";
+import { SendIcon } from "@/components/ui/animated-state-icons";
 
 interface JDConfirmModalProps {
   rawJD: string;
@@ -61,8 +62,9 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        background: "rgba(0,0,0,0.75)",
-        backdropFilter: "blur(6px)",
+        background: "rgba(0,0,0,0.85)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -71,56 +73,74 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
     >
       <div
         style={{
-          background: "var(--bg-panel)",
-          border: "1px solid var(--border-strong)",
-          borderRadius: "10px",
+          background: "rgba(13,13,13,0.95)",
+          border: "1px solid rgba(249,104,70,0.15)",
+          borderRadius: "16px",
           width: "100%",
-          maxWidth: "900px",
+          maxWidth: "920px",
           maxHeight: "90vh",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
+          boxShadow: "0 0 0 1px rgba(255,255,255,0.04), 0 24px 64px rgba(0,0,0,0.7)",
+          backgroundImage: "linear-gradient(to bottom, rgba(249,104,70,0.04) 0px, transparent 60px)",
         }}
       >
         {/* Modal header */}
         <div
           style={{
-            padding: "16px 24px",
-            borderBottom: "1px solid var(--border)",
+            padding: "18px 24px",
+            borderBottom: "1px solid rgba(255,255,255,0.05)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             flexShrink: 0,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--accent)" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            {/* Step pill */}
             <span
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: "11px",
+                fontSize: "9px",
                 fontWeight: 600,
-                letterSpacing: "0.1em",
-                color: "var(--text-secondary)",
+                letterSpacing: "0.12em",
+                padding: "3px 10px",
+                borderRadius: "100px",
+                background: "rgba(249,104,70,0.1)",
+                border: "1px solid rgba(249,104,70,0.25)",
+                color: "var(--accent)",
                 textTransform: "uppercase",
               }}
             >
-              Step 1 of 2 &mdash; Confirm Parsed Criteria
+              Step 1 / 2
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "14px",
+                fontWeight: 700,
+                letterSpacing: "-0.02em",
+                color: "var(--text-primary)",
+              }}
+            >
+              Confirm Parsed Criteria
             </span>
           </div>
           <button
             onClick={onCancel}
             aria-label="Close"
             style={{
-              background: "none",
-              border: "1px solid var(--border-strong)",
-              borderRadius: "4px",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: "6px",
               color: "var(--text-muted)",
               cursor: "pointer",
               fontFamily: "var(--font-mono)",
-              fontSize: "11px",
-              padding: "4px 10px",
-              letterSpacing: "0.06em",
+              fontSize: "10px",
+              letterSpacing: "0.08em",
+              padding: "5px 12px",
+              transition: "border-color 0.15s ease, color 0.15s ease",
             }}
           >
             ESC
@@ -128,19 +148,13 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
         </div>
 
         {/* Body: two columns */}
-        <div
-          style={{
-            display: "flex",
-            flex: 1,
-            overflow: "hidden",
-            minHeight: 0,
-          }}
-        >
+        <div style={{ display: "flex", flex: 1, overflow: "hidden", minHeight: 0 }}>
+
           {/* Left: raw JD */}
           <div
             style={{
-              width: "40%",
-              borderRight: "1px solid var(--border)",
+              width: "38%",
+              borderRight: "1px solid rgba(255,255,255,0.05)",
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
@@ -148,11 +162,15 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
           >
             <div
               style={{
-                padding: "12px 16px",
-                borderBottom: "1px solid var(--border)",
+                padding: "10px 16px",
+                borderBottom: "1px solid rgba(255,255,255,0.04)",
                 flexShrink: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
               }}
             >
+              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "var(--text-muted)" }} />
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
@@ -163,25 +181,20 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
                   textTransform: "uppercase",
                 }}
               >
-                Original JD
+                original_jd.txt
               </span>
             </div>
-            <div
-              style={{
-                flex: 1,
-                overflowY: "auto",
-                padding: "16px",
-              }}
-            >
+            <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
               <pre
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "11px",
                   color: "var(--text-muted)",
-                  lineHeight: 1.7,
+                  lineHeight: 1.75,
                   whiteSpace: "pre-wrap",
                   wordBreak: "break-word",
                   margin: 0,
+                  opacity: 0.7,
                 }}
               >
                 {rawJD}
@@ -190,32 +203,29 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
           </div>
 
           {/* Right: editable criteria */}
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              overflow: "hidden",
-            }}
-          >
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             <div
               style={{
-                padding: "12px 16px",
-                borderBottom: "1px solid var(--border)",
+                padding: "10px 20px",
+                borderBottom: "1px solid rgba(255,255,255,0.04)",
                 flexShrink: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
               }}
             >
+              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 6px var(--accent)" }} />
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "9px",
                   fontWeight: 600,
                   letterSpacing: "0.12em",
-                  color: "var(--text-muted)",
+                  color: "var(--accent)",
                   textTransform: "uppercase",
                 }}
               >
-                Parsed Criteria &mdash; Edit as needed
+                Parsed Criteria &mdash; edit as needed
               </span>
             </div>
             <div
@@ -225,56 +235,41 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
                 padding: "20px",
                 display: "flex",
                 flexDirection: "column",
-                gap: "16px",
+                gap: "18px",
               }}
             >
-              {/* role_title */}
               <FieldGroup label="Role Title">
-                <input
-                  type="text"
-                  value={edited.role_title}
+                <input type="text" value={edited.role_title}
                   onChange={(e) => setEdited((p) => ({ ...p, role_title: e.target.value }))}
                   style={inputStyle}
                 />
               </FieldGroup>
 
-              {/* min_years_experience */}
               <FieldGroup label="Min. Years Experience">
                 <input
-                  type="number"
-                  min={0}
-                  max={20}
-                  value={edited.min_years_experience}
-                  onChange={(e) =>
-                    setEdited((p) => {
+                  type="number" min={0} max={20} value={edited.min_years_experience}
+                  onChange={(e) => setEdited((p) => {
                     const yrs = parseInt(e.target.value) || 0;
                     return { ...p, min_years_experience: yrs, experience_buckets_acceptable: syncBuckets(yrs) };
-                  })
-                  }
-                  style={{ ...inputStyle, width: "100px" }}
+                  })}
+                  style={{ ...inputStyle, width: "110px" }}
                 />
               </FieldGroup>
 
-              {/* required_domain */}
               <FieldGroup label="Required Domain">
                 <select
                   value={edited.required_domain}
-                  onChange={(e) =>
-                    setEdited((p) => ({ ...p, required_domain: e.target.value as JDCriteria["required_domain"] }))
-                  }
+                  onChange={(e) => setEdited((p) => ({ ...p, required_domain: e.target.value as JDCriteria["required_domain"] }))}
                   style={{ ...inputStyle, cursor: "pointer" }}
                 >
                   {domainOptions.map((d) => (
-                    <option key={d} value={d} style={{ background: "#111", color: "#fff" }}>
-                      {d}
-                    </option>
+                    <option key={d} value={d} style={{ background: "#111", color: "#fff" }}>{d}</option>
                   ))}
                 </select>
               </FieldGroup>
 
-              {/* required_skills */}
               <FieldGroup label="Required Skills">
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "8px" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "10px" }}>
                   {edited.required_skills.map((skill) => (
                     <span
                       key={skill}
@@ -283,12 +278,12 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
                         alignItems: "center",
                         gap: "6px",
                         padding: "4px 10px",
-                        borderRadius: "3px",
-                        border: "1px solid var(--border-strong)",
-                        background: "var(--bg-tertiary)",
+                        borderRadius: "6px",
+                        border: "1px solid rgba(249,104,70,0.2)",
+                        background: "rgba(249,104,70,0.07)",
                         fontFamily: "var(--font-mono)",
                         fontSize: "11px",
-                        color: "var(--text-secondary)",
+                        color: "var(--accent)",
                       }}
                     >
                       {skill}
@@ -299,11 +294,12 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
                           background: "none",
                           border: "none",
                           cursor: "pointer",
-                          color: "var(--text-muted)",
+                          color: "rgba(249,104,70,0.5)",
                           padding: 0,
                           fontFamily: "var(--font-mono)",
-                          fontSize: "12px",
+                          fontSize: "13px",
                           lineHeight: 1,
+                          transition: "color 0.15s ease",
                         }}
                       >
                         x
@@ -323,25 +319,25 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
                   <button
                     onClick={addSkill}
                     style={{
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       fontSize: "11px",
                       fontWeight: 600,
-                      padding: "7px 14px",
-                      borderRadius: "4px",
-                      border: "1px solid var(--border-strong)",
-                      background: "var(--bg-tertiary)",
-                      color: "var(--text-secondary)",
+                      padding: "7px 16px",
+                      borderRadius: "6px",
+                      border: "1px solid rgba(249,104,70,0.25)",
+                      background: "rgba(249,104,70,0.08)",
+                      color: "var(--accent)",
                       cursor: "pointer",
-                      letterSpacing: "0.06em",
+                      letterSpacing: "0.04em",
+                      transition: "background 0.15s ease",
                     }}
                   >
-                    + ADD
+                    + Add
                   </button>
                 </div>
               </FieldGroup>
 
-              {/* Toggles */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <ToggleField
                   label="Technical Role"
                   checked={edited.is_technical_role}
@@ -361,47 +357,53 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
         <div
           style={{
             padding: "16px 24px",
-            borderTop: "1px solid var(--border)",
+            borderTop: "1px solid rgba(255,255,255,0.05)",
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-end",
             gap: "10px",
             flexShrink: 0,
+            background: "rgba(255,255,255,0.01)",
           }}
         >
           <button
             onClick={onCancel}
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: "11px",
-              fontWeight: 500,
-              letterSpacing: "0.06em",
-              padding: "8px 20px",
-              borderRadius: "4px",
-              border: "1px solid var(--border-strong)",
-              background: "var(--bg-tertiary)",
+              fontWeight: 600,
+              letterSpacing: "0.04em",
+              padding: "9px 20px",
+              borderRadius: "8px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.03)",
               color: "var(--text-secondary)",
               cursor: "pointer",
             }}
           >
-            CANCEL
+            Cancel
           </button>
           <button
             onClick={() => onConfirm(edited)}
+            className="shimmer-btn"
             style={{
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-display)",
               fontSize: "11px",
               fontWeight: 700,
-              letterSpacing: "0.08em",
-              padding: "8px 24px",
-              borderRadius: "4px",
+              letterSpacing: "0.04em",
+              padding: "9px 24px",
+              borderRadius: "8px",
               border: "none",
               background: "var(--accent)",
               color: "#000",
               cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
             }}
           >
-            CONFIRM CRITERIA --&gt;
+            Confirm Criteria
+            <SendIcon size={14} color="#000" controlled={false} />
           </button>
         </div>
       </div>
@@ -415,12 +417,13 @@ const inputStyle: React.CSSProperties = {
   fontFamily: "var(--font-mono)",
   fontSize: "12px",
   color: "var(--text-primary)",
-  background: "var(--bg-secondary)",
-  border: "1px solid var(--border-strong)",
-  borderRadius: "4px",
-  padding: "7px 12px",
+  background: "rgba(255,255,255,0.03)",
+  border: "1px solid rgba(255,255,255,0.08)",
+  borderRadius: "6px",
+  padding: "8px 12px",
   outline: "none",
   width: "100%",
+  transition: "border-color 0.15s ease",
 };
 
 function FieldGroup({ label, children }: { label: string; children: React.ReactNode }) {
@@ -432,10 +435,10 @@ function FieldGroup({ label, children }: { label: string; children: React.ReactN
           fontFamily: "var(--font-mono)",
           fontSize: "9px",
           fontWeight: 600,
-          letterSpacing: "0.12em",
+          letterSpacing: "0.14em",
           color: "var(--text-muted)",
           textTransform: "uppercase",
-          marginBottom: "6px",
+          marginBottom: "7px",
         }}
       >
         {label}
@@ -446,9 +449,7 @@ function FieldGroup({ label, children }: { label: string; children: React.ReactN
 }
 
 function ToggleField({
-  label,
-  checked,
-  onChange,
+  label, checked, onChange,
 }: {
   label: string;
   checked: boolean;
@@ -460,17 +461,19 @@ function ToggleField({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "10px 14px",
-        borderRadius: "4px",
-        border: "1px solid var(--border)",
-        background: "var(--bg-secondary)",
+        padding: "11px 14px",
+        borderRadius: "8px",
+        border: checked ? "1px solid rgba(249,104,70,0.2)" : "1px solid rgba(255,255,255,0.06)",
+        background: checked ? "rgba(249,104,70,0.05)" : "rgba(255,255,255,0.02)",
+        transition: "background 0.2s ease, border-color 0.2s ease",
       }}
     >
       <span
         style={{
-          fontFamily: "var(--font-mono)",
+          fontFamily: "var(--font-display)",
           fontSize: "12px",
-          color: "var(--text-secondary)",
+          fontWeight: 500,
+          color: checked ? "var(--text-primary)" : "var(--text-secondary)",
         }}
       >
         {label}
@@ -480,24 +483,25 @@ function ToggleField({
         aria-checked={checked}
         onClick={() => onChange(!checked)}
         style={{
-          width: "36px",
-          height: "20px",
-          borderRadius: "10px",
-          border: "1px solid var(--border-strong)",
-          background: checked ? "var(--accent)" : "var(--bg-tertiary)",
+          width: "38px",
+          height: "22px",
+          borderRadius: "11px",
+          border: "none",
+          background: checked ? "var(--accent)" : "rgba(255,255,255,0.1)",
           cursor: "pointer",
           position: "relative",
           transition: "background 0.2s ease",
           flexShrink: 0,
+          boxShadow: checked ? "0 0 10px rgba(249,104,70,0.3)" : "none",
         }}
       >
         <span
           style={{
             position: "absolute",
-            top: "2px",
-            left: checked ? "17px" : "2px",
-            width: "14px",
-            height: "14px",
+            top: "3px",
+            left: checked ? "18px" : "3px",
+            width: "16px",
+            height: "16px",
             borderRadius: "50%",
             background: checked ? "#000" : "var(--text-muted)",
             transition: "left 0.2s ease",

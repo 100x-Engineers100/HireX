@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import JDConfirmModal from "@/components/JDConfirmModal";
 import RubricApprovalModal from "@/components/RubricApprovalModal";
 import { JDCriteria, ScoringRubric, DimensionScore } from "@/types";
+import { SuccessIcon, DownloadDoneIcon, SendIcon } from "@/components/ui/animated-state-icons";
 
 // ---- Types ----
 type Stage = "idle" | "parsing-jd" | "pre-filtering" | "scoring" | "done" | "error";
@@ -487,82 +488,76 @@ export default function Home() {
           position: "sticky",
           top: 0,
           zIndex: 50,
-          background: "rgba(8,8,8,0.88)",
-          backdropFilter: "blur(16px)",
-          borderBottom: "1px solid var(--border)",
+          padding: "14px 24px",
+          background: "transparent",
+          pointerEvents: "none",
         }}
       >
         <div
           style={{
             maxWidth: "1100px",
             margin: "0 auto",
-            padding: "0 32px",
             height: "52px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            padding: "0 20px",
+            borderRadius: "14px",
+            background: "rgba(8,8,8,0.72)",
+            backdropFilter: "blur(24px) saturate(140%)",
+            WebkitBackdropFilter: "blur(24px) saturate(140%)",
+            border: "1px solid rgba(255,255,255,0.07)",
+            boxShadow: "0 0 0 1px rgba(249,104,70,0.05), 0 8px 32px rgba(0,0,0,0.5)",
+            pointerEvents: "auto",
           }}
         >
           {/* Logo */}
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <div
-              style={{
-                width: "26px",
-                height: "26px",
-                background: "var(--accent)",
-                borderRadius: "3px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
+          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+            {/* Icon mark: diamond + slash */}
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" style={{ flexShrink: 0 }}>
+              {/* Coral diamond */}
+              <rect
+                x="7" y="7" width="16" height="16"
+                rx="2"
+                transform="rotate(45 15 15)"
+                fill="#F96846"
+              />
+              {/* Inner slash — white */}
+              <line x1="11" y1="19" x2="19" y2="11" stroke="#000" strokeWidth="2.2" strokeLinecap="round" />
+              {/* Small dot top-right */}
+              <circle cx="21" cy="9" r="2" fill="#F96846" />
+            </svg>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
               <span
                 style={{
-                  fontSize: "11px",
                   fontFamily: "var(--font-display)",
                   fontWeight: 800,
-                  color: "#000",
-                  letterSpacing: "-0.02em",
+                  fontSize: "16px",
+                  letterSpacing: "-0.04em",
+                  lineHeight: 1,
+                  color: "var(--text-primary)",
                 }}
               >
-                H
+                Hire<span style={{ color: "var(--accent)" }}>X</span>
+              </span>
+              <span
+                style={{
+                  fontSize: "9px",
+                  fontFamily: "var(--font-mono)",
+                  fontWeight: 500,
+                  letterSpacing: "0.12em",
+                  color: "var(--text-muted)",
+                  textTransform: "uppercase",
+                }}
+              >
+                Resume Screener
               </span>
             </div>
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 800,
-                fontSize: "15px",
-                letterSpacing: "-0.03em",
-                color: "var(--text-primary)",
-              }}
-            >
-              Hire<span style={{ color: "var(--accent)" }}>X</span>
-            </span>
-            <div
-              style={{
-                width: "1px",
-                height: "14px",
-                background: "var(--border-strong)",
-              }}
-            />
-            <span
-              style={{
-                fontSize: "10px",
-                fontFamily: "var(--font-mono)",
-                fontWeight: 500,
-                letterSpacing: "0.1em",
-                color: "var(--text-muted)",
-                textTransform: "uppercase",
-              }}
-            >
-              Resume Screener
-            </span>
           </div>
 
           {/* Right meta */}
-          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <span
               style={{
                 fontSize: "10px",
@@ -573,18 +568,21 @@ export default function Home() {
             >
               C4 &bull; C5 &bull; C6
             </span>
+            {/* Glassmorphism pill badge */}
             <span
               style={{
                 fontSize: "10px",
                 fontFamily: "var(--font-mono)",
-                fontWeight: 500,
+                fontWeight: 600,
                 letterSpacing: "0.1em",
-                padding: "3px 8px",
-                borderRadius: "3px",
-                border: "1px solid var(--accent-border)",
+                padding: "4px 12px",
+                borderRadius: "100px",
+                border: "1px solid rgba(249,104,70,0.35)",
                 color: "var(--accent)",
-                background: "var(--accent-dim)",
+                background: "rgba(249,104,70,0.08)",
+                backdropFilter: "blur(8px)",
                 textTransform: "uppercase",
+                boxShadow: "0 0 12px rgba(249,104,70,0.12)",
               }}
             >
               Internal
@@ -601,54 +599,102 @@ export default function Home() {
         }}
       >
         {/* ---- Hero ---- */}
-        <div style={{ marginBottom: "48px", position: "relative" }}>
-          {/* Ghost watermark */}
+        <div style={{ marginBottom: "56px", position: "relative", paddingTop: "16px" }}>
+
+          {/* Glow blob — bottom left */}
+          <div
+            aria-hidden="true"
+            className="glow-blob"
+            style={{
+              width: "600px",
+              height: "360px",
+              bottom: "-80px",
+              left: "-120px",
+              opacity: 0.8,
+            }}
+          />
+          {/* Glow blob — top right (smaller, dimmer) */}
+          <div
+            aria-hidden="true"
+            className="glow-blob"
+            style={{
+              width: "320px",
+              height: "220px",
+              top: "-40px",
+              right: "-60px",
+              opacity: 0.4,
+              background: "rgba(249,104,70,0.07)",
+              filter: "blur(80px)",
+            }}
+          />
+
+          {/* Ghost watermark — decorative right-side typographic element */}
           <div
             aria-hidden="true"
             style={{
               position: "absolute",
-              top: "-12px",
-              left: "-4px",
+              top: "0px",
+              right: "-2px",
               fontFamily: "var(--font-display)",
-              fontWeight: 800,
-              fontSize: "clamp(64px, 10vw, 96px)",
-              letterSpacing: "-0.05em",
+              fontWeight: 600,
+              fontSize: "clamp(80px, 15vw, 130px)",
+              letterSpacing: "-0.06em",
               color: "transparent",
               WebkitTextStroke: "1px rgba(249,104,70,0.07)",
               pointerEvents: "none",
               userSelect: "none",
               lineHeight: 1,
               whiteSpace: "nowrap",
+              textAlign: "right",
+              writingMode: "horizontal-tb",
             }}
           >
-            SCREENING
+            HIREX
+            <br />
+
           </div>
 
-          {/* Orange rule */}
-          <div
-            style={{
-              width: "32px",
-              height: "3px",
-              background: "var(--accent)",
-              borderRadius: "2px",
-              marginBottom: "16px",
-            }}
-          />
+          {/* Status badge */}
+
+
+
 
           <h1
             style={{
               fontFamily: "var(--font-display)",
               fontWeight: 800,
-              fontSize: "clamp(28px, 4vw, 40px)",
-              letterSpacing: "-0.03em",
-              lineHeight: 1.1,
+              fontSize: "clamp(34px, 5vw, 52px)",
+              letterSpacing: "-0.04em",
+              lineHeight: 1.05,
               color: "var(--text-primary)",
-              marginBottom: "10px",
+              marginBottom: "16px",
+              position: "relative",
             }}
           >
             Ranked Candidate
             <br />
-            <span style={{ color: "var(--accent)" }}>Shortlist</span> &mdash; Instantly.
+            <span
+              style={{
+                color: "var(--accent)",
+                position: "relative",
+                display: "inline-block",
+              }}
+            >
+              Shortlist
+              {/* Underline glow */}
+              <span
+                style={{
+                  position: "absolute",
+                  bottom: "-4px",
+                  left: 0,
+                  right: 0,
+                  height: "2px",
+                  background: "linear-gradient(90deg, var(--accent), transparent)",
+                  borderRadius: "2px",
+                }}
+              />
+            </span>
+            {" "}&mdash; Instantly.
           </h1>
 
           <p
@@ -656,9 +702,10 @@ export default function Home() {
               fontFamily: "var(--font-mono)",
               fontSize: "12px",
               color: "var(--text-secondary)",
-              lineHeight: 1.7,
+              lineHeight: 1.85,
               letterSpacing: "0.01em",
-              maxWidth: "480px",
+              maxWidth: "500px",
+              marginBottom: "28px",
             }}
           >
             Paste a JD. The engine pre-filters 880+ cohort candidates,
@@ -666,42 +713,66 @@ export default function Home() {
             ready for download in under 5 minutes.
           </p>
 
-          {/* Stats row */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "24px",
-              marginTop: "24px",
-            }}
-          >
+          {/* Stats row — glassmorphism cards */}
+          <div style={{ display: "flex", alignItems: "stretch", gap: "1px" }}>
             {[
-              { label: "Cohorts", value: "C4-C6" },
-              { label: "Candidates", value: "880+" },
-              { label: "Avg. Runtime", value: "~4 min" },
-            ].map(({ label, value }) => (
-              <div key={label} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span
+              { label: "Cohorts", value: "C4–C6", sub: "3 batches" },
+              { label: "Candidates", value: "880+", sub: "pre-filtered" },
+              { label: "Avg. Runtime", value: "~4 min", sub: "end-to-end" },
+            ].map(({ label, value, sub }, i) => (
+              <div
+                key={label}
+                style={{
+                  padding: "14px 24px",
+                  background: i === 0
+                    ? "rgba(249,104,70,0.06)"
+                    : "rgba(255,255,255,0.02)",
+                  border: "1px solid",
+                  borderColor: i === 0
+                    ? "rgba(249,104,70,0.2)"
+                    : "rgba(255,255,255,0.05)",
+                  borderRadius: i === 0 ? "8px 0 0 8px" : i === 2 ? "0 8px 8px 0" : "0",
+                  backdropFilter: "blur(8px)",
+                  minWidth: "110px",
+                }}
+              >
+                <div
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontWeight: 700,
-                    fontSize: "13px",
-                    color: "var(--text-primary)",
+                    fontSize: "20px",
+                    letterSpacing: "-0.03em",
+                    color: i === 0 ? "var(--accent)" : "var(--text-primary)",
+                    lineHeight: 1,
+                    marginBottom: "4px",
                   }}
                 >
                   {value}
-                </span>
-                <span
+                </div>
+                <div
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "10px",
+                    fontSize: "9px",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
                     color: "var(--text-muted)",
-                    letterSpacing: "0.06em",
                     textTransform: "uppercase",
                   }}
                 >
                   {label}
-                </span>
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "9px",
+                    letterSpacing: "0.04em",
+                    color: "var(--text-muted)",
+                    marginTop: "2px",
+                    opacity: 0.6,
+                  }}
+                >
+                  {sub}
+                </div>
               </div>
             ))}
           </div>
@@ -712,30 +783,32 @@ export default function Home() {
           style={{
             background: "var(--bg-panel)",
             border: "1px solid var(--border-strong)",
-            borderRadius: "8px",
+            borderRadius: "12px",
             overflow: "hidden",
             marginBottom: "24px",
+            boxShadow: "0 0 0 1px rgba(249,104,70,0.04), 0 4px 24px rgba(0,0,0,0.3)",
+            // top accent bar via background gradient
+            backgroundImage: "linear-gradient(to bottom, rgba(249,104,70,0.06) 0px, transparent 52px)",
           }}
         >
           {/* Panel header */}
           <div
             style={{
-              padding: "12px 16px",
+              padding: "13px 18px",
               borderBottom: "1px solid var(--border)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <div
-                style={{
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: "50%",
-                  background: "var(--accent)",
-                }}
-              />
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              {/* macOS-style window dots */}
+              <div style={{ display: "flex", gap: "5px" }}>
+                <div style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#ff5f57" }} />
+                <div style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#febc2e" }} />
+                <div style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#28c840" }} />
+              </div>
+              <div style={{ width: "1px", height: "14px", background: "var(--border)" }} />
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
@@ -746,14 +819,15 @@ export default function Home() {
                   textTransform: "uppercase",
                 }}
               >
-                Job Description
+                job_description.txt
               </span>
             </div>
             <span
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "10px",
-                color: "var(--text-muted)",
+                color: jdText.length > 0 ? "var(--accent)" : "var(--text-muted)",
+                letterSpacing: "0.04em",
               }}
             >
               {jdText.length > 0 ? `${jdText.length} chars` : "min: title + skills + exp"}
@@ -815,13 +889,14 @@ export default function Home() {
             <button
               onClick={handleParseJD}
               disabled={isRunning || progress.stage === "parsing-jd" || !jdText.trim()}
+              className={!isRunning && jdText.trim() ? "shimmer-btn" : ""}
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: "11px",
                 fontWeight: 700,
-                letterSpacing: "0.08em",
-                padding: "7px 20px",
-                borderRadius: "4px",
+                letterSpacing: "0.06em",
+                padding: "8px 22px",
+                borderRadius: "6px",
                 border: "none",
                 background: isRunning || !jdText.trim() ? "var(--bg-tertiary)" : "var(--accent)",
                 color: isRunning || !jdText.trim() ? "var(--text-muted)" : "#000",
@@ -838,7 +913,10 @@ export default function Home() {
                   <span>PARSING JD...</span>
                 </>
               ) : (
-                "PARSE JD"
+                <>
+                  <SendIcon size={14} color="#000" controlled={false} />
+                  PARSE JD
+                </>
               )}
             </button>
           </div>
@@ -851,13 +929,15 @@ export default function Home() {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              padding: "12px 16px",
-              borderRadius: "6px",
-              border: "1px solid var(--border-strong)",
-              background: "var(--bg-panel)",
+              padding: "14px 20px",
+              borderRadius: "10px",
+              border: "1px solid rgba(249,104,70,0.15)",
+              background: "rgba(249,104,70,0.04)",
+              backdropFilter: "blur(12px)",
               marginBottom: "16px",
               gap: "16px",
               flexWrap: "wrap",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
@@ -903,13 +983,14 @@ export default function Home() {
             <button
               onClick={handleScreenCandidates}
               disabled={!approvedRubric || isRunning}
+              className={approvedRubric && !isRunning ? "shimmer-btn" : ""}
               style={{
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-display)",
                 fontSize: "11px",
                 fontWeight: 700,
-                letterSpacing: "0.08em",
-                padding: "8px 20px",
-                borderRadius: "4px",
+                letterSpacing: "0.06em",
+                padding: "9px 22px",
+                borderRadius: "6px",
                 border: "none",
                 background: approvedRubric && !isRunning ? "var(--accent)" : "var(--bg-tertiary)",
                 color: approvedRubric && !isRunning ? "#000" : "var(--text-muted)",
@@ -917,7 +998,6 @@ export default function Home() {
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                transition: "background 0.15s ease",
                 flexShrink: 0,
               }}
             >
@@ -978,7 +1058,7 @@ export default function Home() {
               <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: 1 }}>
                 {isRunning && <Spinner />}
                 {progress.stage === "done" && (
-                  <span style={{ color: "var(--green)", fontSize: "12px", fontFamily: "var(--font-mono)" }}>[OK]</span>
+                  <SuccessIcon size={20} color="var(--green)" controlled={true} />
                 )}
                 <span
                   style={{
@@ -1122,24 +1202,25 @@ export default function Home() {
               {progress.stage === "done" && (
                 <button
                   onClick={handleDownload}
+                  className="shimmer-btn"
                   style={{
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-display)",
                     fontSize: "11px",
                     fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    padding: "8px 20px",
-                    borderRadius: "4px",
-                    border: "1px solid var(--accent-border)",
-                    background: "var(--accent-dim)",
-                    color: "var(--accent)",
+                    letterSpacing: "0.04em",
+                    padding: "7px 18px",
+                    borderRadius: "8px",
+                    border: "none",
+                    background: "var(--accent)",
+                    color: "#000",
                     cursor: "pointer",
-                    transition: "background 0.15s ease",
                     display: "flex",
                     alignItems: "center",
                     gap: "8px",
                   }}
                 >
-                  [XLS] DOWNLOAD EXCEL
+                  <DownloadDoneIcon size={16} color="#000" controlled={true} />
+                  Download Excel
                 </button>
               )}
             </div>
@@ -1173,14 +1254,14 @@ export default function Home() {
                       }}
                     >
                       {[
-                        { label: "#",            align: "right"  as const },
-                        { label: "NAME / EMAIL", align: "left"   as const },
-                        { label: "COHORT",       align: "center" as const },
-                        { label: "SCORE",        align: "center" as const },
-                        { label: "REC",          align: "center" as const },
-                        { label: "DESIGNATION",  align: "left"   as const },
-                        { label: "EXP",          align: "center" as const },
-                        { label: "DOMAIN",       align: "left"   as const },
+                        { label: "#", align: "right" as const },
+                        { label: "NAME / EMAIL", align: "left" as const },
+                        { label: "COHORT", align: "center" as const },
+                        { label: "SCORE", align: "center" as const },
+                        { label: "REC", align: "center" as const },
+                        { label: "DESIGNATION", align: "left" as const },
+                        { label: "EXP", align: "center" as const },
+                        { label: "DOMAIN", align: "left" as const },
                       ].map(({ label, align }) => (
                         <th
                           key={label}
@@ -1206,247 +1287,247 @@ export default function Home() {
                       const isExpanded = expandedRows.has(rowKey);
                       const dimScores: DimensionScore[] = c.score?.dimension_scores ?? [];
                       return (<React.Fragment key={rowKey}>
-                      <tr
-                        className="result-row"
-                        onClick={() => dimScores.length > 0 && toggleExpandRow(rowKey)}
-                        style={{
-                          borderTop: "1px solid var(--border)",
-                          background: i % 2 === 0 ? "var(--bg-panel)" : "var(--bg-secondary)",
-                          cursor: dimScores.length > 0 ? "pointer" : "default",
-                        }}
-                      >
-                        {/* Rank */}
-                        <td
+                        <tr
+                          className="result-row"
+                          onClick={() => dimScores.length > 0 && toggleExpandRow(rowKey)}
                           style={{
-                            textAlign: "right",
-                            fontFamily: "var(--font-mono)",
-                            fontSize: "11px",
-                            color: "var(--text-muted)",
-                            fontVariantNumeric: "tabular-nums",
+                            borderTop: "1px solid var(--border)",
+                            background: i % 2 === 0 ? "var(--bg-panel)" : "var(--bg-secondary)",
+                            cursor: dimScores.length > 0 ? "pointer" : "default",
                           }}
                         >
-                          {String(i + 1).padStart(2, "0")}
-                        </td>
-
-                        {/* Name + Email */}
-                        <td>
-                          <div
+                          {/* Rank */}
+                          <td
                             style={{
-                              fontFamily: "var(--font-display)",
-                              fontWeight: 600,
-                              fontSize: "13px",
-                              color: "var(--text-primary)",
-                              letterSpacing: "-0.01em",
-                              marginBottom: "2px",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {c.name}
-                          </div>
-                          <div
-                            style={{
+                              textAlign: "right",
                               fontFamily: "var(--font-mono)",
-                              fontSize: "10px",
+                              fontSize: "11px",
                               color: "var(--text-muted)",
-                              letterSpacing: "0.01em",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
+                              fontVariantNumeric: "tabular-nums",
                             }}
                           >
-                            {c.email}
-                          </div>
-                        </td>
+                            {String(i + 1).padStart(2, "0")}
+                          </td>
 
-                        {/* Cohort */}
-                        <td style={{ textAlign: "center" }}>
-                          <span
+                          {/* Name + Email */}
+                          <td>
+                            <div
+                              style={{
+                                fontFamily: "var(--font-display)",
+                                fontWeight: 600,
+                                fontSize: "13px",
+                                color: "var(--text-primary)",
+                                letterSpacing: "-0.01em",
+                                marginBottom: "2px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {c.name}
+                            </div>
+                            <div
+                              style={{
+                                fontFamily: "var(--font-mono)",
+                                fontSize: "10px",
+                                color: "var(--text-muted)",
+                                letterSpacing: "0.01em",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {c.email}
+                            </div>
+                          </td>
+
+                          {/* Cohort */}
+                          <td style={{ textAlign: "center" }}>
+                            <span
+                              style={{
+                                fontFamily: "var(--font-mono)",
+                                fontSize: "10px",
+                                fontWeight: 600,
+                                letterSpacing: "0.08em",
+                                padding: "3px 8px",
+                                borderRadius: "3px",
+                                border: "1px solid var(--accent-border)",
+                                color: "var(--accent)",
+                                background: "var(--accent-dim)",
+                              }}
+                            >
+                              {c.cohort}
+                            </span>
+                          </td>
+
+                          {/* Score */}
+                          <td style={{ textAlign: "center" }}>
+                            <ScoreBadge score={c.score?.overall_score ?? 0} />
+                          </td>
+
+                          {/* Recommendation */}
+                          <td style={{ textAlign: "center" }}>
+                            <RecBadge rec={c.score?.recommendation ?? ""} />
+                          </td>
+
+                          {/* Designation + Company */}
+                          <td>
+                            <div
+                              style={{
+                                fontFamily: "var(--font-mono)",
+                                fontSize: "11px",
+                                color: "var(--text-secondary)",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                                marginBottom: "2px",
+                              }}
+                            >
+                              {c.designation || "--"}
+                            </div>
+                            <div
+                              style={{
+                                fontFamily: "var(--font-mono)",
+                                fontSize: "10px",
+                                color: "var(--text-muted)",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {c.company || "--"}
+                            </div>
+                          </td>
+
+                          {/* Experience */}
+                          <td
                             style={{
+                              textAlign: "center",
                               fontFamily: "var(--font-mono)",
-                              fontSize: "10px",
-                              fontWeight: 600,
-                              letterSpacing: "0.08em",
-                              padding: "3px 8px",
-                              borderRadius: "3px",
-                              border: "1px solid var(--accent-border)",
-                              color: "var(--accent)",
-                              background: "var(--accent-dim)",
+                              fontSize: "11px",
+                              color: "var(--text-secondary)",
+                              whiteSpace: "nowrap",
+                              fontVariantNumeric: "tabular-nums",
                             }}
                           >
-                            {c.cohort}
-                          </span>
-                        </td>
+                            {c.total_experience || "--"}
+                          </td>
 
-                        {/* Score */}
-                        <td style={{ textAlign: "center" }}>
-                          <ScoreBadge score={c.score?.overall_score ?? 0} />
-                        </td>
-
-                        {/* Recommendation */}
-                        <td style={{ textAlign: "center" }}>
-                          <RecBadge rec={c.score?.recommendation ?? ""} />
-                        </td>
-
-                        {/* Designation + Company */}
-                        <td>
-                          <div
+                          {/* Domain */}
+                          <td
                             style={{
                               fontFamily: "var(--font-mono)",
                               fontSize: "11px",
                               color: "var(--text-secondary)",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                              marginBottom: "2px",
                             }}
                           >
-                            {c.designation || "--"}
-                          </div>
-                          <div
-                            style={{
-                              fontFamily: "var(--font-mono)",
-                              fontSize: "10px",
-                              color: "var(--text-muted)",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {c.company || "--"}
-                          </div>
-                        </td>
-
-                        {/* Experience */}
-                        <td
-                          style={{
-                            textAlign: "center",
-                            fontFamily: "var(--font-mono)",
-                            fontSize: "11px",
-                            color: "var(--text-secondary)",
-                            whiteSpace: "nowrap",
-                            fontVariantNumeric: "tabular-nums",
-                          }}
-                        >
-                          {c.total_experience || "--"}
-                        </td>
-
-                        {/* Domain */}
-                        <td
-                          style={{
-                            fontFamily: "var(--font-mono)",
-                            fontSize: "11px",
-                            color: "var(--text-secondary)",
-                          }}
-                        >
-                          <div
-                            style={{
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {c.domain || "--"}
-                            {dimScores.length > 0 && (
-                              <span
-                                style={{
-                                  marginLeft: "6px",
-                                  fontFamily: "var(--font-mono)",
-                                  fontSize: "9px",
-                                  color: "var(--accent)",
-                                  letterSpacing: "0.06em",
-                                }}
-                              >
-                                {isExpanded ? "[-]" : "[+]"}
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                      {isExpanded && dimScores.length > 0 && (
-                        <tr
-                          key={`${rowKey}-expand`}
-                          style={{
-                            background: "var(--bg-tertiary)",
-                            borderTop: "1px solid var(--border)",
-                          }}
-                        >
-                          <td colSpan={8} style={{ padding: "12px 16px" }}>
-                            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                              <thead>
-                                <tr>
-                                  {["Dimension", "Score", "Evidence"].map((h) => (
-                                    <th
-                                      key={h}
-                                      style={{
-                                        textAlign: "left",
-                                        fontFamily: "var(--font-mono)",
-                                        fontSize: "9px",
-                                        fontWeight: 600,
-                                        letterSpacing: "0.1em",
-                                        color: "var(--text-muted)",
-                                        textTransform: "uppercase",
-                                        paddingBottom: "6px",
-                                        borderBottom: "1px solid var(--border)",
-                                      }}
-                                    >
-                                      {h}
-                                    </th>
-                                  ))}
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {dimScores.map((ds, di) => (
-                                  <tr key={di}>
-                                    <td
-                                      style={{
-                                        fontFamily: "var(--font-mono)",
-                                        fontSize: "11px",
-                                        fontWeight: 600,
-                                        color: "var(--text-secondary)",
-                                        padding: "6px 8px 6px 0",
-                                        whiteSpace: "nowrap",
-                                        width: "160px",
-                                        borderBottom: "1px solid var(--border)",
-                                      }}
-                                    >
-                                      {ds.dimension}
-                                    </td>
-                                    <td
-                                      style={{
-                                        fontFamily: "var(--font-mono)",
-                                        fontSize: "12px",
-                                        fontWeight: 700,
-                                        color: ds.score >= 4 ? "var(--green)" : ds.score >= 3 ? "var(--yellow)" : "var(--red, #e05252)",
-                                        padding: "6px 16px 6px 0",
-                                        whiteSpace: "nowrap",
-                                        width: "50px",
-                                        fontVariantNumeric: "tabular-nums",
-                                        borderBottom: "1px solid var(--border)",
-                                      }}
-                                    >
-                                      {ds.score}/5
-                                    </td>
-                                    <td
-                                      style={{
-                                        fontFamily: "var(--font-mono)",
-                                        fontSize: "11px",
-                                        color: "var(--text-muted)",
-                                        padding: "6px 0",
-                                        lineHeight: 1.5,
-                                        borderBottom: "1px solid var(--border)",
-                                      }}
-                                    >
-                                      {ds.evidence || ds.reasoning || "--"}
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
+                            <div
+                              style={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {c.domain || "--"}
+                              {dimScores.length > 0 && (
+                                <span
+                                  style={{
+                                    marginLeft: "6px",
+                                    fontFamily: "var(--font-mono)",
+                                    fontSize: "9px",
+                                    color: "var(--accent)",
+                                    letterSpacing: "0.06em",
+                                  }}
+                                >
+                                  {isExpanded ? "[-]" : "[+]"}
+                                </span>
+                              )}
+                            </div>
                           </td>
                         </tr>
-                      )}
+                        {isExpanded && dimScores.length > 0 && (
+                          <tr
+                            key={`${rowKey}-expand`}
+                            style={{
+                              background: "var(--bg-tertiary)",
+                              borderTop: "1px solid var(--border)",
+                            }}
+                          >
+                            <td colSpan={8} style={{ padding: "12px 16px" }}>
+                              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                                <thead>
+                                  <tr>
+                                    {["Dimension", "Score", "Evidence"].map((h) => (
+                                      <th
+                                        key={h}
+                                        style={{
+                                          textAlign: "left",
+                                          fontFamily: "var(--font-mono)",
+                                          fontSize: "9px",
+                                          fontWeight: 600,
+                                          letterSpacing: "0.1em",
+                                          color: "var(--text-muted)",
+                                          textTransform: "uppercase",
+                                          paddingBottom: "6px",
+                                          borderBottom: "1px solid var(--border)",
+                                        }}
+                                      >
+                                        {h}
+                                      </th>
+                                    ))}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {dimScores.map((ds, di) => (
+                                    <tr key={di}>
+                                      <td
+                                        style={{
+                                          fontFamily: "var(--font-mono)",
+                                          fontSize: "11px",
+                                          fontWeight: 600,
+                                          color: "var(--text-secondary)",
+                                          padding: "6px 8px 6px 0",
+                                          whiteSpace: "nowrap",
+                                          width: "160px",
+                                          borderBottom: "1px solid var(--border)",
+                                        }}
+                                      >
+                                        {ds.dimension}
+                                      </td>
+                                      <td
+                                        style={{
+                                          fontFamily: "var(--font-mono)",
+                                          fontSize: "12px",
+                                          fontWeight: 700,
+                                          color: ds.score >= 4 ? "var(--green)" : ds.score >= 3 ? "var(--yellow)" : "var(--red, #e05252)",
+                                          padding: "6px 16px 6px 0",
+                                          whiteSpace: "nowrap",
+                                          width: "50px",
+                                          fontVariantNumeric: "tabular-nums",
+                                          borderBottom: "1px solid var(--border)",
+                                        }}
+                                      >
+                                        {ds.score}/5
+                                      </td>
+                                      <td
+                                        style={{
+                                          fontFamily: "var(--font-mono)",
+                                          fontSize: "11px",
+                                          color: "var(--text-muted)",
+                                          padding: "6px 0",
+                                          lineHeight: 1.5,
+                                          borderBottom: "1px solid var(--border)",
+                                        }}
+                                      >
+                                        {ds.evidence || ds.reasoning || "--"}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        )}
                       </React.Fragment>);
                     })}
                   </tbody>
@@ -1520,7 +1601,8 @@ export default function Home() {
       <footer
         style={{
           borderTop: "1px solid var(--border)",
-          padding: "20px 0",
+          padding: "24px 0",
+          marginTop: "40px",
         }}
       >
         <div
@@ -1531,28 +1613,58 @@ export default function Home() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "12px",
           }}
         >
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "10px",
-              color: "var(--text-muted)",
-              letterSpacing: "0.04em",
-            }}
-          >
-            HireX &mdash; 100x Launchpad Internal Tool
-          </span>
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "10px",
-              color: "var(--text-muted)",
-              letterSpacing: "0.04em",
-            }}
-          >
-            v1.0 &bull; Stage 3
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            {/* Mini logo repeat */}
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 800,
+                fontSize: "12px",
+                letterSpacing: "-0.03em",
+                color: "var(--text-secondary)",
+              }}
+            >
+              Hire<span style={{ color: "var(--accent)" }}>X</span>
+            </span>
+            <span style={{ width: "1px", height: "10px", background: "var(--border-strong)", display: "inline-block" }} />
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                color: "var(--text-muted)",
+                letterSpacing: "0.04em",
+              }}
+            >
+              &copy; {new Date().getFullYear()} HireX. All rights reserved.
+            </span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                color: "var(--text-muted)",
+                letterSpacing: "0.04em",
+              }}
+            >
+              Powered by GPT
+            </span>
+            <span style={{ width: "1px", height: "10px", background: "var(--border-strong)", display: "inline-block" }} />
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                color: "var(--text-muted)",
+                letterSpacing: "0.04em",
+              }}
+            >
+              v1.0.0
+            </span>
+          </div>
         </div>
       </footer>
     </div>

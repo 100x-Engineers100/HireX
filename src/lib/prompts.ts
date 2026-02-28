@@ -7,7 +7,8 @@ Return ONLY valid JSON matching this schema exactly:
 {
   "role_title": string,
   "min_years_experience": number,
-  "experience_buckets_acceptable": string[],  // from: ["0-1", "1-3", "3-8", "8-10", "10+"]
+  "max_years_experience": number,
+  "experience_buckets_acceptable": string[],  // from: ["<1", "1-3", "3-8", "8-10", ">10"]
   "required_domain": "software" | "product" | "design" | "data" | "operations" | "other",
   "required_skills": string[],
   "requires_working_experience": boolean,
@@ -15,7 +16,9 @@ Return ONLY valid JSON matching this schema exactly:
 }
 
 Rules:
-- experience_buckets_acceptable: list all buckets >= min_years_experience
+- min_years_experience / max_years_experience: extract the range from the JD.
+  Examples: "3-5 years" -> min=3, max=5 | "fresher / 0-1 year" -> min=0, max=1 | "8+ years / senior" -> min=8, max=0 (0 means no cap)
+- experience_buckets_acceptable: list buckets that overlap [min, max]. If max=0 include all buckets >= min.
 - required_skills: max 8, most important only
 - No extra fields, no markdown, no explanation
 
@@ -50,7 +53,7 @@ export function buildScoringPrompt(
 
 Job Requirements:
 - Role: ${criteria.role_title}
-- Min Experience: ${criteria.min_years_experience} years
+- Experience Range: ${criteria.min_years_experience}${criteria.max_years_experience > 0 ? `-${criteria.max_years_experience}` : "+"} years
 - Domain: ${criteria.required_domain}
 - Required Skills: ${criteria.required_skills.join(", ")}
 - Technical Role: ${criteria.is_technical_role}
@@ -103,7 +106,7 @@ export function buildRubricGenPrompt(criteria: JDCriteria, rawJDText: string): s
 Role: ${criteria.role_title}
 Domain: ${criteria.required_domain}
 Required Skills: ${criteria.required_skills.join(", ")}
-Min Experience: ${criteria.min_years_experience} years
+Experience Range: ${criteria.min_years_experience}${criteria.max_years_experience > 0 ? `-${criteria.max_years_experience}` : "+"} years
 Technical Role: ${criteria.is_technical_role}
 
 ${domainHint}

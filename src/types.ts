@@ -3,6 +3,7 @@
 export interface JDCriteria {
   role_title: string;
   min_years_experience: number;
+  max_years_experience: number;   // 0 = no upper cap
   experience_buckets_acceptable: string[];
   required_domain: "software" | "product" | "design" | "data" | "operations" | "other";
   required_skills: string[];

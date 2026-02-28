@@ -30,7 +30,9 @@ export async function parseJD(jdText: string): Promise<JDCriteria> {
   const raw = response.choices[0]?.message?.content || "{}";
 
   try {
-    return JSON.parse(raw) as JDCriteria;
+    const parsed = JSON.parse(raw);
+    parsed.max_years_experience = parsed.max_years_experience ?? 0;
+    return parsed as JDCriteria;
   } catch {
     throw new Error(`LLM returned invalid JSON for JD parse: ${raw}`);
   }

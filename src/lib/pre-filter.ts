@@ -1,15 +1,15 @@
 import { CandidateRow, JDCriteria } from "@/types";
 
-// Maps experience bucket string to approximate years
 // Actual CSV values: '<1', '1-3', '3-8', '8-10', '>10'
-const EXP_BUCKET_YEARS: Record<string, number> = {
-  "<1":  0.5,
-  "0-1": 0.5,  // fallback alias
-  "1-3": 2,
-  "3-8": 5,
-  "8-10": 9,
-  ">10": 11,
-  "10+": 11,   // fallback alias
+// Range boundaries for overlap-based filtering (avoids midpoint approximation errors)
+const BUCKET_RANGE: Record<string, [number, number]> = {
+  "<1":  [0, 1],
+  "0-1": [0, 1],   // fallback alias
+  "1-3": [1, 3],
+  "3-8": [3, 8],
+  "8-10":[8, 10],
+  ">10": [10, 99],
+  "10+": [10, 99],  // fallback alias
 };
 
 const NO_CODE_VALUES = [
@@ -32,10 +32,20 @@ export function preFilter(
     // Rule 1: Must have resume URL
     if (!c.resume_url || c.resume_url.trim() === "") continue;
 
-    // Rule 2: Experience bucket check
-    if (criteria.min_years_experience > 0) {
-      const years = EXP_BUCKET_YEARS[c.total_experience.trim()] ?? -1;
-      if (years < criteria.min_years_experience) continue;
+    // Rule 2: Experience range check (bucket overlap — no midpoint approximation)
+    // Reject bucket only when it lies entirely outside [min, max].
+    // bucketMax <= min  → bucket is fully below the floor (strict: e.g. 1-3 is excluded for min=3)
+    // bucketMin > max   → bucket is fully above the cap
+    {
+      const range = BUCKET_RANGE[c.total_experience.trim()];
+      if (range) {
+        const [bucketMin, bucketMax] = range;
+        const min = criteria.min_years_experience;
+        const max = criteria.max_years_experience; // 0 = no cap
+        if (min > 0 && bucketMax <= min) continue;
+        if (max > 0 && bucketMin >= max) continue;
+      }
+      // unknown bucket: falls through (no data = not penalised)
     }
 
     // Rule 3: Working experience required

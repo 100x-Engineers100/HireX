@@ -25,9 +25,16 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
 
   const ALL_BUCKETS = ["<1", "1-3", "3-8", "8-10", ">10"];
   const BUCKET_MIN: Record<string, number> = { "<1": 0, "1-3": 1, "3-8": 3, "8-10": 8, ">10": 10 };
+  const BUCKET_MAX: Record<string, number> = { "<1": 1, "1-3": 3, "3-8": 8, "8-10": 10, ">10": 99 };
 
-  function syncBuckets(minYears: number): string[] {
-    return ALL_BUCKETS.filter((b) => BUCKET_MIN[b] >= minYears);
+  function syncBuckets(min: number, max: number): string[] {
+    return ALL_BUCKETS.filter((b) => {
+      const bMin = BUCKET_MIN[b];
+      const bMax = BUCKET_MAX[b];
+      if (min > 0 && bMax < min) return false;
+      if (max > 0 && bMin > max) return false;
+      return true;
+    });
   }
 
   function addSkill() {
@@ -245,15 +252,31 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
                 />
               </FieldGroup>
 
-              <FieldGroup label="Min. Years Experience">
-                <input
-                  type="number" min={0} max={20} value={edited.min_years_experience}
-                  onChange={(e) => setEdited((p) => {
-                    const yrs = parseInt(e.target.value) || 0;
-                    return { ...p, min_years_experience: yrs, experience_buckets_acceptable: syncBuckets(yrs) };
-                  })}
-                  style={{ ...inputStyle, width: "110px" }}
-                />
+              <FieldGroup label="Experience Range (years)">
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <input
+                    type="number" min={0} max={20} value={edited.min_years_experience}
+                    onChange={(e) => setEdited((p) => {
+                      const min = parseInt(e.target.value) || 0;
+                      return { ...p, min_years_experience: min, experience_buckets_acceptable: syncBuckets(min, p.max_years_experience) };
+                    })}
+                    style={{ ...inputStyle, width: "90px" }}
+                    placeholder="Min"
+                  />
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--text-muted)" }}>to</span>
+                  <input
+                    type="number" min={0} max={30} value={edited.max_years_experience}
+                    onChange={(e) => setEdited((p) => {
+                      const max = parseInt(e.target.value) || 0;
+                      return { ...p, max_years_experience: max, experience_buckets_acceptable: syncBuckets(p.min_years_experience, max) };
+                    })}
+                    style={{ ...inputStyle, width: "90px" }}
+                    placeholder="No cap (0)"
+                  />
+                  {edited.max_years_experience === 0 && (
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "9px", color: "var(--text-muted)", letterSpacing: "0.08em" }}>NO CAP</span>
+                  )}
+                </div>
               </FieldGroup>
 
               <FieldGroup label="Required Domain">

@@ -55,9 +55,9 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        background: "rgba(0,0,0,0.85)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
+        background: "rgba(0,0,0,0.7)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -66,58 +66,59 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
     >
       <div
         style={{
-          background: "rgba(13,13,13,0.95)",
-          border: "1px solid rgba(249,104,70,0.15)",
-          borderRadius: "16px",
+          background: "rgba(10,10,10,0.4)",
+          border: "1px solid var(--border-strong)",
+          borderRadius: "20px",
           width: "100%",
-          maxWidth: "720px",
-          maxHeight: "90vh",
+          maxWidth: "760px",
+          maxHeight: "85vh",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
-          boxShadow: "0 0 0 1px rgba(255,255,255,0.04), 0 24px 64px rgba(0,0,0,0.7)",
-          backgroundImage: "linear-gradient(to bottom, rgba(249,104,70,0.04) 0px, transparent 60px)",
+          boxShadow: "0 32px 64px rgba(0,0,0,0.6)",
+          backdropFilter: "blur(32px) saturate(140%)",
         }}
       >
         {/* Header */}
         <div
           style={{
-            padding: "18px 24px",
-            borderBottom: "1px solid rgba(255,255,255,0.05)",
+            padding: "20px 28px",
+            borderBottom: "1px solid var(--border)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             flexShrink: 0,
-            gap: "16px",
+            gap: "20px",
+            background: "rgba(255,255,255,0.02)",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: 1, minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px", flex: 1, minWidth: 0 }}>
             {/* Step pill */}
             <span
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "9px",
-                fontWeight: 600,
-                letterSpacing: "0.12em",
-                padding: "3px 10px",
-                borderRadius: "100px",
-                background: "rgba(249,104,70,0.1)",
+                fontWeight: 700,
+                letterSpacing: "0.15em",
+                padding: "4px 12px",
+                borderRadius: "6px",
+                background: "rgba(249,104,70,0.06)",
                 border: "1px solid rgba(249,104,70,0.25)",
                 color: "var(--accent)",
                 textTransform: "uppercase",
                 flexShrink: 0,
               }}
             >
-              Step 2 / 2
+              PHASE 02/02
             </span>
             <div style={{ minWidth: 0 }}>
-              <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
+              <div style={{ display: "flex", alignItems: "baseline", gap: "10px" }}>
                 <span
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    letterSpacing: "-0.02em",
+                    fontSize: "16px",
+                    fontWeight: 800,
+                    letterSpacing: "-0.03em",
                     color: "var(--text-primary)",
                   }}
                 >
@@ -127,26 +128,30 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "11px",
+                    fontWeight: 600,
                     color: "var(--accent)",
+                    opacity: 0.8,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {rubric.generated_for}
+                  {rubric.generated_for.toUpperCase()}
                 </span>
               </div>
               <p
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "11px",
+                  fontSize: "10px",
                   fontWeight: 500,
-                  color: "var(--text-secondary)",
+                  color: "var(--text-muted)",
                   lineHeight: 1.5,
-                  marginTop: "2px",
+                  marginTop: "3px",
+                  opacity: 0.7,
+                  letterSpacing: "0.01em"
                 }}
               >
-                Review and edit dimensions. Weights must sum to 1.00.
+                Define evaluation weights. Total sum must equal 1.00.
               </p>
             </div>
           </div>
@@ -154,21 +159,23 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
           {/* Weight indicator */}
           <div
             style={{
-              padding: "8px 16px",
-              borderRadius: "10px",
+              padding: "10px 20px",
+              borderRadius: "12px",
               border: `1px solid ${weightBorder}`,
               background: weightBg,
               flexShrink: 0,
               textAlign: "center",
-              minWidth: "80px",
+              minWidth: "90px",
+              boxShadow: weightOk ? "0 0 20px rgba(61,204,122,0.1)" : "none",
+              transition: "all 0.3s ease"
             }}
           >
             <div
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "18px",
-                fontWeight: 800,
-                letterSpacing: "-0.03em",
+                fontSize: "20px",
+                fontWeight: 900,
+                letterSpacing: "-0.04em",
                 color: weightColor,
                 fontVariantNumeric: "tabular-nums",
                 lineHeight: 1,
@@ -180,14 +187,15 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "8px",
-                letterSpacing: "0.1em",
+                fontWeight: 800,
+                letterSpacing: "0.15em",
                 color: weightColor,
                 textTransform: "uppercase",
-                marginTop: "3px",
-                opacity: 0.8,
+                marginTop: "4px",
+                opacity: 0.9,
               }}
             >
-              {weightOk ? "total [OK]" : "must = 1.00"}
+              {weightOk ? "VALID" : "INVALID"}
             </div>
           </div>
         </div>
@@ -197,10 +205,10 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
           style={{
             flex: 1,
             overflowY: "auto",
-            padding: "16px 24px",
+            padding: "24px 28px",
             display: "flex",
             flexDirection: "column",
-            gap: "8px",
+            gap: "10px",
           }}
         >
           {dimensions.map((dim, idx) => {
@@ -209,20 +217,20 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
               <div
                 key={idx}
                 style={{
-                  border: isOpen ? "1px solid rgba(249,104,70,0.2)" : "1px solid rgba(255,255,255,0.06)",
-                  borderRadius: "10px",
+                  border: isOpen ? "1px solid rgba(249,104,70,0.3)" : "1px solid var(--border)",
+                  borderRadius: "12px",
                   overflow: "hidden",
-                  background: isOpen ? "rgba(249,104,70,0.03)" : "rgba(255,255,255,0.02)",
-                  transition: "border-color 0.2s ease, background 0.2s ease",
+                  background: isOpen ? "rgba(249,104,70,0.04)" : "rgba(255,255,255,0.015)",
+                  transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
               >
                 {/* Dimension header row */}
                 <div
                   style={{
-                    padding: "12px 16px",
+                    padding: "14px 20px",
                     display: "flex",
                     alignItems: "center",
-                    gap: "12px",
+                    gap: "14px",
                   }}
                 >
                   {/* Index badge */}
@@ -230,11 +238,11 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
                     style={{
                       fontFamily: "var(--font-mono)",
                       fontSize: "10px",
-                      fontWeight: 700,
+                      fontWeight: 800,
                       color: "var(--accent)",
-                      width: "22px",
+                      width: "24px",
                       flexShrink: 0,
-                      opacity: 0.7,
+                      opacity: 0.6,
                     }}
                   >
                     {String(idx + 1).padStart(2, "0")}
@@ -245,31 +253,35 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
                     type="text"
                     value={dim.name}
                     onChange={(e) => updateDimension(idx, { name: e.target.value })}
+                    placeholder="Dimension Name"
                     style={{
                       flex: 1,
                       fontFamily: "var(--font-display)",
-                      fontSize: "13px",
-                      fontWeight: 600,
+                      fontSize: "14px",
+                      fontWeight: 700,
                       letterSpacing: "-0.01em",
                       color: "var(--text-primary)",
                       background: "transparent",
                       border: "none",
                       outline: "none",
+                      caretColor: "var(--accent)"
                     }}
                   />
 
                   {/* Weight input */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
                     <span
                       style={{
                         fontFamily: "var(--font-mono)",
-                        fontSize: "8px",
+                        fontSize: "9px",
+                        fontWeight: 800,
                         color: "var(--text-muted)",
                         textTransform: "uppercase",
-                        letterSpacing: "0.12em",
+                        letterSpacing: "0.15em",
+                        opacity: 0.6
                       }}
                     >
-                      wt
+                      WEIGHT
                     </span>
                     <input
                       type="number"
@@ -284,14 +296,17 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
                         fontWeight: 700,
                         color: "var(--text-primary)",
                         background: "rgba(255,255,255,0.04)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                        borderRadius: "5px",
-                        padding: "4px 8px",
+                        border: "1px solid var(--border-strong)",
+                        borderRadius: "7px",
+                        padding: "5px 10px",
                         outline: "none",
-                        width: "68px",
+                        width: "72px",
                         textAlign: "center",
                         fontVariantNumeric: "tabular-nums",
+                        transition: "border-color 0.2s ease"
                       }}
+                      onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent)")}
+                      onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-strong)")}
                     />
                   </div>
 
@@ -300,21 +315,24 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
                     onClick={() => setExpandedIdx(isOpen ? null : idx)}
                     aria-expanded={isOpen}
                     style={{
-                      background: isOpen ? "rgba(249,104,70,0.1)" : "rgba(255,255,255,0.04)",
-                      border: isOpen ? "1px solid rgba(249,104,70,0.2)" : "1px solid rgba(255,255,255,0.07)",
-                      borderRadius: "6px",
+                      background: isOpen ? "rgba(249,104,70,0.12)" : "rgba(255,255,255,0.04)",
+                      border: isOpen ? "1px solid rgba(249,104,70,0.3)" : "1px solid var(--border-strong)",
+                      borderRadius: "8px",
                       color: isOpen ? "var(--accent)" : "var(--text-muted)",
                       cursor: "pointer",
                       fontFamily: "var(--font-mono)",
                       fontSize: "9px",
-                      letterSpacing: "0.08em",
-                      padding: "4px 10px",
+                      fontWeight: 700,
+                      letterSpacing: "0.1em",
+                      padding: "6px 14px",
                       flexShrink: 0,
-                      transition: "all 0.15s ease",
+                      transition: "all 0.2s ease",
                       textTransform: "uppercase",
                     }}
+                    onMouseOver={(e) => !isOpen && (e.currentTarget.style.borderColor = "var(--text-muted)")}
+                    onMouseOut={(e) => !isOpen && (e.currentTarget.style.borderColor = "var(--border-strong)")}
                   >
-                    {isOpen ? "^ anchors" : "v anchors"}
+                    {isOpen ? "HIDE" : "DETAILS"}
                   </button>
                 </div>
 
@@ -322,19 +340,19 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
                 {isOpen && (
                   <div
                     style={{
-                      borderTop: "1px solid rgba(255,255,255,0.05)",
-                      padding: "16px",
+                      borderTop: "1px solid var(--border)",
+                      padding: "20px 24px",
                       display: "flex",
                       flexDirection: "column",
-                      gap: "12px",
-                      background: "rgba(0,0,0,0.2)",
+                      gap: "16px",
+                      background: "rgba(0,0,0,0.15)",
                     }}
                   >
                     {(
                       [
-                        { field: "score_1" as const, label: "Score 1 — Poor", color: "var(--red)" },
-                        { field: "score_3" as const, label: "Score 3 — Average", color: "var(--yellow)" },
-                        { field: "score_5" as const, label: "Score 5 — Excellent", color: "var(--green)" },
+                        { field: "score_1" as const, label: "Threshold 1.0 — Below Standard", color: "var(--red)" },
+                        { field: "score_3" as const, label: "Threshold 3.0 — Competent", color: "var(--yellow)" },
+                        { field: "score_5" as const, label: "Threshold 5.0 — Outstanding", color: "var(--green)" },
                       ] as const
                     ).map(({ field, label, color }) => (
                       <div key={field}>
@@ -342,18 +360,17 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
                           style={{
                             display: "flex",
                             alignItems: "center",
-                            gap: "6px",
+                            gap: "8px",
                             fontFamily: "var(--font-mono)",
                             fontSize: "9px",
-                            fontWeight: 600,
-                            letterSpacing: "0.12em",
+                            fontWeight: 800,
+                            letterSpacing: "0.15em",
                             color,
                             textTransform: "uppercase",
-                            marginBottom: "6px",
-                            opacity: 0.8,
+                            marginBottom: "8px",
                           }}
                         >
-                          <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: color, display: "inline-block", flexShrink: 0 }} />
+                          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: color, display: "inline-block", flexShrink: 0, boxShadow: `0 0 8px ${color}` }} />
                           {label}
                         </label>
                         <textarea
@@ -366,13 +383,16 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
                             fontSize: "11px",
                             color: "var(--text-secondary)",
                             background: "rgba(255,255,255,0.03)",
-                            border: "1px solid rgba(255,255,255,0.06)",
-                            borderRadius: "6px",
-                            padding: "8px 12px",
+                            border: "1px solid var(--border-strong)",
+                            borderRadius: "8px",
+                            padding: "10px 14px",
                             outline: "none",
-                            resize: "vertical",
-                            lineHeight: 1.65,
+                            resize: "none",
+                            lineHeight: 1.7,
+                            transition: "border-color 0.2s ease"
                           }}
+                          onFocus={(e) => (e.currentTarget.style.borderColor = color)}
+                          onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-strong)")}
                         />
                       </div>
                     ))}
@@ -386,13 +406,13 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
         {/* Footer */}
         <div
           style={{
-            padding: "16px 24px",
-            borderTop: "1px solid rgba(255,255,255,0.05)",
+            padding: "20px 28px",
+            borderTop: "1px solid var(--border)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             flexShrink: 0,
-            background: "rgba(255,255,255,0.01)",
+            background: "rgba(255,255,255,0.02)",
           }}
         >
           <button
@@ -400,24 +420,26 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "11px",
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-              padding: "9px 20px",
-              borderRadius: "8px",
-              border: "1px solid rgba(255,255,255,0.08)",
+              fontWeight: 700,
+              letterSpacing: "0.06em",
+              padding: "10px 22px",
+              borderRadius: "10px",
+              border: "1px solid var(--border-strong)",
               background: "rgba(255,255,255,0.03)",
               color: "var(--text-secondary)",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "10px",
+              transition: "all 0.2s ease"
             }}
+            onMouseOver={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
+            onMouseOut={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.03)")}
           >
-            {/* Left-pointing chevron SVG */}
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M9 11L5 7l4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M9 11L5 7l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            Back
+            PREVIOUS
           </button>
           <button
             onClick={handleApprove}
@@ -426,20 +448,23 @@ export default function RubricApprovalModal({ rubric, onApprove, onBack }: Rubri
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.04em",
-              padding: "9px 24px",
-              borderRadius: "8px",
+              fontWeight: 800,
+              letterSpacing: "0.08em",
+              padding: "11px 28px",
+              borderRadius: "10px",
               border: "none",
-              background: weightOk ? "var(--accent)" : "rgba(255,255,255,0.05)",
+              background: weightOk ? "var(--accent)" : "rgba(255,255,255,0.03)",
               color: weightOk ? "#000" : "var(--text-muted)",
               cursor: weightOk ? "pointer" : "not-allowed",
               display: "flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "10px",
+              boxShadow: weightOk ? "0 4px 16px rgba(249,104,70,0.3)" : "none",
+              transition: "all 0.3s ease",
+              opacity: weightOk ? 1 : 0.6
             }}
           >
-            Approve Rubric
+            INITIALIZE ENGINE
             <SendIcon size={14} color={weightOk ? "#000" : "var(--text-muted)"} controlled={false} />
           </button>
         </div>

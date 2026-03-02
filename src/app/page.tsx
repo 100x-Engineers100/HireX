@@ -186,51 +186,53 @@ function PipelineStages({ stage }: { stage: Stage }) {
 
         return (
           <div key={key} style={{ display: "flex", alignItems: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              {/* Dot */}
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              {/* Refined Dot */}
               <div
                 style={{
-                  width: "7px",
-                  height: "7px",
+                  width: "6px",
+                  height: "6px",
                   borderRadius: "50%",
                   flexShrink: 0,
                   background: isComplete
                     ? "var(--green)"
                     : isActive
                       ? "var(--accent)"
-                      : "var(--text-muted)",
-                  transition: "background 0.3s ease",
-                  boxShadow: isActive ? "0 0 6px var(--accent)" : "none",
+                      : "var(--border-strong)",
+                  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                  boxShadow: isActive ? "0 0 10px var(--accent)" : "none",
+                  border: isActive ? "1px solid rgba(249,104,70,0.4)" : "none",
                 }}
               />
-              {/* Label */}
+              {/* Minimal Label */}
               <span
                 style={{
-                  fontSize: "10px",
+                  fontSize: "9px",
                   fontFamily: "var(--font-mono)",
-                  fontWeight: isActive ? 600 : 400,
-                  letterSpacing: "0.06em",
+                  fontWeight: isActive ? 700 : 500,
+                  letterSpacing: "0.1em",
                   color: isComplete
                     ? "var(--green)"
                     : isActive
-                      ? "var(--accent)"
+                      ? "var(--text-primary)"
                       : "var(--text-muted)",
                   transition: "color 0.3s ease",
+                  opacity: isActive || isComplete ? 1 : 0.6,
                 }}
               >
                 {label}
               </span>
             </div>
-            {/* Connector line */}
+            {/* Thinner connector line */}
             {index < 3 && (
               <div
                 style={{
-                  width: "28px",
+                  width: "24px",
                   height: "1px",
-                  margin: "0 8px",
+                  margin: "0 12px",
                   background: currentIdx > index
                     ? "var(--green)"
-                    : "var(--border-strong)",
+                    : "rgba(255,255,255,0.06)",
                   transition: "background 0.3s ease",
                 }}
               />
@@ -497,45 +499,44 @@ export default function Home() {
           style={{
             maxWidth: "1100px",
             margin: "0 auto",
-            height: "52px",
+            height: "54px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             padding: "0 20px",
-            borderRadius: "14px",
-            background: "rgba(8,8,8,0.72)",
-            backdropFilter: "blur(24px) saturate(140%)",
-            WebkitBackdropFilter: "blur(24px) saturate(140%)",
-            border: "1px solid rgba(255,255,255,0.07)",
-            boxShadow: "0 0 0 1px rgba(249,104,70,0.05), 0 8px 32px rgba(0,0,0,0.5)",
+            borderRadius: "16px",
+            background: "rgba(8,8,8,0.65)",
+            backdropFilter: "blur(28px) saturate(160%)",
+            WebkitBackdropFilter: "blur(28px) saturate(160%)",
+            border: "1px solid rgba(255,255,255,0.06)",
+            boxShadow: "0 0 0 1px rgba(249,104,70,0.03), 0 12px 40px rgba(0,0,0,0.6)",
             pointerEvents: "auto",
           }}
         >
           {/* Logo */}
-          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-            {/* Icon mark: diamond + slash */}
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" style={{ flexShrink: 0 }}>
-              {/* Coral diamond */}
-              <rect
-                x="7" y="7" width="16" height="16"
-                rx="2"
-                transform="rotate(45 15 15)"
-                fill="#F96846"
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            {/* Modern Minimal Logo: Abstract 'H' / Grid concept */}
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+              {/* Background square with rounded corners */}
+              <rect x="0" y="0" width="30" height="30" rx="8" fill="var(--bg-tertiary)" stroke="var(--border-strong)" strokeWidth="1.5" />
+              {/* Abstract 'H' mark in coral */}
+              <path
+                d="M10 9V21M20 9V21M10 15H20"
+                stroke="var(--accent)"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
-              {/* Inner slash — white */}
-              <line x1="11" y1="19" x2="19" y2="11" stroke="#000" strokeWidth="2.2" strokeLinecap="round" />
-              {/* Small dot top-right */}
-              <circle cx="21" cy="9" r="2" fill="#F96846" />
             </svg>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0px" }}>
               <span
                 style={{
                   fontFamily: "var(--font-display)",
                   fontWeight: 800,
-                  fontSize: "16px",
-                  letterSpacing: "-0.04em",
-                  lineHeight: 1,
+                  fontSize: "17px",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1.1,
                   color: "var(--text-primary)",
                 }}
               >
@@ -543,46 +544,51 @@ export default function Home() {
               </span>
               <span
                 style={{
-                  fontSize: "9px",
+                  fontSize: "8.5px",
                   fontFamily: "var(--font-mono)",
-                  fontWeight: 500,
-                  letterSpacing: "0.12em",
+                  fontWeight: 600,
+                  letterSpacing: "0.15em",
                   color: "var(--text-muted)",
                   textTransform: "uppercase",
+                  marginTop: "-1px"
                 }}
               >
-                Resume Screener
+                Next-Gen Screener
               </span>
             </div>
           </div>
 
           {/* Right meta */}
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <span
+          <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
+            <div
               style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
                 fontSize: "10px",
                 fontFamily: "var(--font-mono)",
                 color: "var(--text-muted)",
-                letterSpacing: "0.04em",
+                letterSpacing: "0.06em",
               }}
             >
-              C4 &bull; C5 &bull; C6
-            </span>
-            {/* Glassmorphism pill badge */}
+              <span style={{ opacity: 0.6 }}>Cohorts:</span>
+              <span style={{ color: "var(--text-secondary)", fontWeight: 500 }}>C4·C5·C6</span>
+            </div>
+            {/* Refined Glassmorphism pill badge */}
             <span
               style={{
-                fontSize: "10px",
+                fontSize: "9px",
                 fontFamily: "var(--font-mono)",
-                fontWeight: 600,
-                letterSpacing: "0.1em",
-                padding: "4px 12px",
-                borderRadius: "100px",
-                border: "1px solid rgba(249,104,70,0.35)",
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                padding: "4px 10px",
+                borderRadius: "8px",
+                border: "1px solid rgba(249,104,70,0.25)",
                 color: "var(--accent)",
-                background: "rgba(249,104,70,0.08)",
-                backdropFilter: "blur(8px)",
+                background: "rgba(249,104,70,0.06)",
+                backdropFilter: "blur(4px)",
                 textTransform: "uppercase",
-                boxShadow: "0 0 12px rgba(249,104,70,0.12)",
+                boxShadow: "inset 0 0 10px rgba(249,104,70,0.05)",
               }}
             >
               Internal
@@ -599,7 +605,7 @@ export default function Home() {
         }}
       >
         {/* ---- Hero ---- */}
-        <div style={{ marginBottom: "56px", position: "relative", paddingTop: "16px" }}>
+        <div style={{ marginBottom: "64px", position: "relative", paddingTop: "24px" }}>
 
           {/* Glow blob — bottom left */}
           <div
@@ -607,10 +613,11 @@ export default function Home() {
             className="glow-blob"
             style={{
               width: "600px",
-              height: "360px",
-              bottom: "-80px",
-              left: "-120px",
-              opacity: 0.8,
+              height: "400px",
+              bottom: "-100px",
+              left: "-150px",
+              opacity: 0.7,
+              background: "rgba(249,104,70,0.08)",
             }}
           />
           {/* Glow blob — top right (smaller, dimmer) */}
@@ -618,13 +625,13 @@ export default function Home() {
             aria-hidden="true"
             className="glow-blob"
             style={{
-              width: "320px",
-              height: "220px",
-              top: "-40px",
-              right: "-60px",
-              opacity: 0.4,
-              background: "rgba(249,104,70,0.07)",
-              filter: "blur(80px)",
+              width: "400px",
+              height: "280px",
+              top: "-60px",
+              right: "-80px",
+              opacity: 0.3,
+              background: "rgba(249,104,70,0.06)",
+              filter: "blur(100px)",
             }}
           />
 
@@ -653,21 +660,15 @@ export default function Home() {
             <br />
 
           </div>
-
-          {/* Status badge */}
-
-
-
-
           <h1
             style={{
               fontFamily: "var(--font-display)",
               fontWeight: 800,
-              fontSize: "clamp(34px, 5vw, 52px)",
-              letterSpacing: "-0.04em",
-              lineHeight: 1.05,
+              fontSize: "clamp(36px, 6vw, 56px)",
+              letterSpacing: "-0.05em",
+              lineHeight: 1,
               color: "var(--text-primary)",
-              marginBottom: "16px",
+              marginBottom: "20px",
               position: "relative",
             }}
           >
@@ -680,72 +681,64 @@ export default function Home() {
                 display: "inline-block",
               }}
             >
-              Cohorts
-              {/* Underline glow */}
+              Cohorts - Instantly
+              {/* Refined underline glow */}
               <span
                 style={{
                   position: "absolute",
-                  bottom: "-4px",
+                  bottom: "2px",
                   left: 0,
                   right: 0,
-                  height: "2px",
-                  background: "linear-gradient(90deg, var(--accent), transparent)",
+                  height: "3px",
+                  background: "linear-gradient(90deg, var(--accent) 0%, transparent 80%)",
                   borderRadius: "2px",
+                  opacity: 0.8,
                 }}
               />
             </span>
-            {" "}&mdash; Instantly.
           </h1>
 
           <p
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: "13px",
+              fontSize: "14px",
               fontWeight: 500,
-              color: "#c0bab4",
-              lineHeight: 1.85,
+              color: "var(--text-secondary)",
+              lineHeight: 1.7,
               letterSpacing: "0.01em",
-              maxWidth: "500px",
-              marginBottom: "28px",
+              maxWidth: "520px",
+              marginBottom: "36px",
+              opacity: 0.9,
             }}
           >
-            Paste a JD. The engine pre-filters 880+ cohort candidates,
-            fetches each resume, and returns an LLM-scored shortlist
-            ready for download in under 5 minutes.
+            The ultimate engine for high-volume recruitment. Pre-filter
+            thousands of candidates and return LLM-verified shortlists
+            with precision accuracy in minutes.
           </p>
 
-          {/* Stats row — glassmorphism cards */}
-          <div style={{ display: "flex", alignItems: "stretch", gap: "1px" }}>
+          {/* Stats row — minimalistic layout */}
+          <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
             {[
-              { label: "Cohorts", value: "C4–C6", sub: "3 batches" },
-              { label: "Candidates", value: "880+", sub: "pre-filtered" },
-              { label: "Avg. Runtime", value: "~4 min", sub: "end-to-end" },
-            ].map(({ label, value, sub }, i) => (
+              { label: "COHORTS", value: "C4–C6" },
+              { label: "CANDIDATES", value: "880+" },
+              { label: "RUNTIME", value: "< 4 MIN" },
+            ].map(({ label, value }, i) => (
               <div
                 key={label}
                 style={{
-                  padding: "14px 24px",
-                  background: i === 0
-                    ? "rgba(249,104,70,0.06)"
-                    : "rgba(255,255,255,0.02)",
-                  border: "1px solid",
-                  borderColor: i === 0
-                    ? "rgba(249,104,70,0.2)"
-                    : "rgba(255,255,255,0.05)",
-                  borderRadius: i === 0 ? "8px 0 0 8px" : i === 2 ? "0 8px 8px 0" : "0",
-                  backdropFilter: "blur(8px)",
-                  minWidth: "110px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "4px",
                 }}
               >
                 <div
                   style={{
                     fontFamily: "var(--font-display)",
                     fontWeight: 700,
-                    fontSize: "20px",
-                    letterSpacing: "-0.03em",
+                    fontSize: "22px",
+                    letterSpacing: "-0.04em",
                     color: i === 0 ? "var(--accent)" : "var(--text-primary)",
                     lineHeight: 1,
-                    marginBottom: "4px",
                   }}
                 >
                   {value}
@@ -754,25 +747,13 @@ export default function Home() {
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "9px",
-                    fontWeight: 600,
-                    letterSpacing: "0.08em",
+                    fontWeight: 700,
+                    letterSpacing: "0.15em",
                     color: "var(--text-muted)",
                     textTransform: "uppercase",
                   }}
                 >
                   {label}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "9px",
-                    letterSpacing: "0.04em",
-                    color: "var(--text-muted)",
-                    marginTop: "2px",
-                    opacity: 0.6,
-                  }}
-                >
-                  {sub}
                 </div>
               </div>
             ))}
@@ -782,90 +763,94 @@ export default function Home() {
         {/* ---- JD Input Panel ---- */}
         <div
           style={{
-            background: "var(--bg-panel)",
+            background: "rgba(10,10,10,0.4)",
             border: "1px solid var(--border-strong)",
-            borderRadius: "12px",
+            borderRadius: "14px",
             overflow: "hidden",
-            marginBottom: "24px",
-            boxShadow: "0 0 0 1px rgba(249,104,70,0.04), 0 4px 24px rgba(0,0,0,0.3)",
-            // top accent bar via background gradient
-            backgroundImage: "linear-gradient(to bottom, rgba(249,104,70,0.06) 0px, transparent 52px)",
+            marginBottom: "32px",
+            boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
+            backdropFilter: "blur(12px)",
           }}
         >
           {/* Panel header */}
           <div
             style={{
-              padding: "13px 18px",
+              padding: "14px 20px",
               borderBottom: "1px solid var(--border)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              background: "rgba(255,255,255,0.02)",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
               {/* macOS-style window dots */}
-              <div style={{ display: "flex", gap: "5px" }}>
-                <div style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#ff5f57" }} />
-                <div style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#febc2e" }} />
-                <div style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#28c840" }} />
+              <div style={{ display: "flex", gap: "6px" }}>
+                <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#FF5F57", opacity: 0.8 }} />
+                <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#FEBC2E", opacity: 0.8 }} />
+                <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#28C840", opacity: 0.8 }} />
               </div>
-              <div style={{ width: "1px", height: "14px", background: "var(--border)" }} />
+              <div style={{ width: "1px", height: "12px", background: "var(--border-strong)", margin: "0 4px" }} />
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "10px",
                   fontWeight: 600,
-                  letterSpacing: "0.1em",
-                  color: "var(--text-secondary)",
+                  letterSpacing: "0.12em",
+                  color: "var(--text-muted)",
                   textTransform: "uppercase",
                 }}
               >
-                job_description.txt
+                PROMPT_INPUT.MD
               </span>
             </div>
-            <span
+            <div
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "10px",
                 color: jdText.length > 0 ? "var(--accent)" : "var(--text-muted)",
-                letterSpacing: "0.04em",
+                letterSpacing: "0.06em",
+                fontWeight: 600,
+                opacity: 0.8
               }}
             >
-              {jdText.length > 0 ? `${jdText.length} chars` : "min: title + skills + exp"}
-            </span>
+              {jdText.length > 0 ? `${jdText.length} / 5000` : "READY"}
+            </div>
           </div>
 
           {/* Textarea */}
           <textarea
             value={jdText}
             onChange={(e) => setJdText(e.target.value)}
-            placeholder={"Paste the full job description here...\n\nInclude: role title, required skills, years of experience, domain."}
+            placeholder={"Enter job requirements here...\n\nSpecifically outline the role title, tech stack, and experience level for best results."}
             disabled={isRunning}
-            rows={11}
+            rows={10}
             style={{
               width: "100%",
-              padding: "16px",
+              padding: "20px",
               background: "transparent",
               color: "var(--text-primary)",
-              fontSize: "12px",
-              lineHeight: 1.8,
+              fontSize: "13px",
+              lineHeight: 1.7,
               resize: "none",
               border: "none",
               outline: "none",
-              opacity: isRunning ? 0.45 : 1,
+              opacity: isRunning ? 0.3 : 1,
               letterSpacing: "0.01em",
+              transition: "opacity 0.3s ease",
             }}
           />
 
           {/* Footer bar */}
           <div
             style={{
-              padding: "12px 16px",
+              padding: "14px 20px",
               borderTop: "1px solid var(--border)",
               display: "flex",
               alignItems: "center",
               justifyContent: "flex-end",
-              gap: "10px",
+              gap: "12px",
+              background: "rgba(0,0,0,0.2)",
             }}
           >
             {isRunning && (
@@ -873,18 +858,21 @@ export default function Home() {
                 onClick={handleStop}
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "11px",
-                  fontWeight: 500,
-                  padding: "7px 16px",
-                  borderRadius: "4px",
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  padding: "8px 18px",
+                  borderRadius: "6px",
                   border: "1px solid var(--border-strong)",
                   background: "var(--bg-tertiary)",
                   color: "var(--text-secondary)",
                   cursor: "pointer",
-                  letterSpacing: "0.04em",
+                  letterSpacing: "0.08em",
+                  transition: "all 0.2s ease",
                 }}
+                onMouseOver={(e) => (e.currentTarget.style.borderColor = "var(--red)")}
+                onMouseOut={(e) => (e.currentTarget.style.borderColor = "var(--border-strong)")}
               >
-                STOP
+                TERMINATE
               </button>
             )}
             <button
@@ -894,29 +882,30 @@ export default function Home() {
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.06em",
-                padding: "8px 22px",
-                borderRadius: "6px",
+                fontWeight: 800,
+                letterSpacing: "0.08em",
+                padding: "10px 24px",
+                borderRadius: "8px",
                 border: "none",
                 background: isRunning || !jdText.trim() ? "var(--bg-tertiary)" : "var(--accent)",
                 color: isRunning || !jdText.trim() ? "var(--text-muted)" : "#000",
                 cursor: isRunning || !jdText.trim() ? "not-allowed" : "pointer",
                 display: "flex",
                 alignItems: "center",
-                gap: "8px",
-                transition: "background 0.15s ease",
+                gap: "10px",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: !isRunning && jdText.trim() ? "0 4px 12px rgba(249,104,70,0.2)" : "none",
               }}
             >
               {progress.stage === "parsing-jd" ? (
                 <>
                   <Spinner />
-                  <span>PARSING JD...</span>
+                  <span style={{ opacity: 0.8 }}>ANALYZING...</span>
                 </>
               ) : (
                 <>
                   <SendIcon size={14} color="#000" controlled={false} />
-                  PARSE JD
+                  <span>INITIALIZE ENGINE</span>
                 </>
               )}
             </button>
@@ -1046,83 +1035,104 @@ export default function Home() {
               marginBottom: "32px",
             }}
           >
-            {/* Top row */}
+            {/* Status bar */}
             <div
               style={{
                 display: "flex",
-                alignItems: "flex-start",
+                alignItems: "center",
                 justifyContent: "space-between",
-                marginBottom: "16px",
+                marginBottom: "14px",
                 gap: "16px",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: 1 }}>
                 {isRunning && <Spinner />}
                 {progress.stage === "done" && (
-                  <SuccessIcon size={20} color="var(--green)" controlled={true} />
+                  <SuccessIcon size={18} color="var(--green)" controlled={true} />
                 )}
                 <span
                   style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "12px",
+                    fontFamily: "var(--font-display)",
+                    fontSize: "13px",
                     color: progress.stage === "done" ? "var(--green)" : "var(--text-primary)",
-                    fontWeight: 500,
-                    letterSpacing: "0.01em",
+                    fontWeight: 700,
+                    letterSpacing: "-0.01em",
                   }}
                 >
-                  {progress.message}
+                  {progress.message.toUpperCase()}
                 </span>
               </div>
               {progress.total > 0 && (
                 <span
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "12px",
-                    fontWeight: 600,
+                    fontSize: "11px",
+                    fontWeight: 800,
                     color: "var(--text-secondary)",
                     whiteSpace: "nowrap",
-                    letterSpacing: "0.04em",
+                    letterSpacing: "0.05em",
+                    background: "rgba(255,255,255,0.04)",
+                    padding: "3px 10px",
+                    borderRadius: "6px",
+                    border: "1px solid var(--border-strong)"
                   }}
                 >
-                  {progress.scored}/{progress.total}
+                  {progress.scored} / {progress.total}
                 </span>
               )}
             </div>
 
             {/* Progress bar */}
             {progress.total > 0 && (
-              <div style={{ marginBottom: "16px" }}>
+              <div style={{ marginBottom: "20px" }}>
                 <div
                   style={{
-                    height: "3px",
-                    borderRadius: "2px",
-                    background: "var(--bg-tertiary)",
+                    height: "5px",
+                    borderRadius: "100px",
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid var(--border-strong)",
                     overflow: "hidden",
+                    position: "relative"
                   }}
                 >
                   <div
                     className={isRunning ? "progress-bar-active" : ""}
                     style={{
                       height: "100%",
-                      borderRadius: "2px",
+                      borderRadius: "100px",
                       width: `${progressPct}%`,
                       background: progress.stage === "done" ? "var(--green)" : "var(--accent)",
-                      transition: "width 0.4s ease",
+                      boxShadow: progress.stage === "done" ? "0 0 10px rgba(61,204,122,0.4)" : "0 0 10px rgba(249,104,70,0.4)",
+                      transition: "width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
                     }}
                   />
                 </div>
                 {progress.currentCandidate && isRunning && (
-                  <p
+                  <div
                     style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "10px",
-                      color: "var(--text-muted)",
-                      marginTop: "6px",
-                      letterSpacing: "0.02em",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      marginTop: "10px",
+                      opacity: 0.8
                     }}
                   >
-                    &gt; {progress.currentCandidate}
-                  </p>
+                    <span style={{ fontSize: "10px", color: "var(--accent)", fontFamily: "var(--font-mono)", fontWeight: 800 }}>ANALYZING</span>
+                    <p
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "10px",
+                        fontWeight: 500,
+                        color: "var(--text-muted)",
+                        letterSpacing: "0.02em",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      &raquo; {progress.currentCandidate.toUpperCase()}
+                    </p>
+                  </div>
                 )}
               </div>
             )}
@@ -1229,18 +1239,20 @@ export default function Home() {
             {/* Table */}
             <div
               style={{
-                background: "var(--bg-panel)",
+                background: "rgba(10,10,10,0.4)",
                 border: "1px solid var(--border-strong)",
-                borderRadius: "8px",
+                borderRadius: "12px",
                 overflow: "hidden",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
+                backdropFilter: "blur(12px)",
               }}
             >
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed", minWidth: "860px" }}>
                   <colgroup>
-                    <col style={{ width: "48px" }} />
-                    <col style={{ width: "22%" }} />
-                    <col style={{ width: "76px" }} />
+                    <col style={{ width: "42px" }} />
+                    <col style={{ width: "24%" }} />
+                    <col style={{ width: "80px" }} />
                     <col style={{ width: "68px" }} />
                     <col style={{ width: "96px" }} />
                     <col style={{ width: "22%" }} />
@@ -1250,19 +1262,19 @@ export default function Home() {
                   <thead>
                     <tr
                       style={{
-                        background: "var(--bg-tertiary)",
+                        background: "rgba(255,255,255,0.02)",
                         borderBottom: "1px solid var(--border-strong)",
                       }}
                     >
                       {[
-                        { label: "#", align: "right" as const },
-                        { label: "NAME / EMAIL", align: "left" as const },
-                        { label: "COHORT", align: "center" as const },
+                        { label: "ID", align: "right" as const },
+                        { label: "CANDIDATE / CONTACT", align: "left" as const },
+                        { label: "BATCH", align: "center" as const },
                         { label: "SCORE", align: "center" as const },
-                        { label: "REC", align: "center" as const },
-                        { label: "DESIGNATION", align: "left" as const },
+                        { label: "DECISION", align: "center" as const },
+                        { label: "CURRENT ROLE", align: "left" as const },
                         { label: "EXP", align: "center" as const },
-                        { label: "DOMAIN", align: "left" as const },
+                        { label: "LOCATION", align: "left" as const },
                       ].map(({ label, align }) => (
                         <th
                           key={label}
@@ -1270,11 +1282,13 @@ export default function Home() {
                             textAlign: align,
                             fontFamily: "var(--font-mono)",
                             fontSize: "9px",
-                            fontWeight: 600,
-                            letterSpacing: "0.1em",
+                            fontWeight: 700,
+                            letterSpacing: "0.12em",
                             color: "var(--text-muted)",
                             textTransform: "uppercase",
                             whiteSpace: "nowrap",
+                            padding: "14px 16px",
+                            opacity: 0.8
                           }}
                         >
                           {label}
@@ -1292,9 +1306,10 @@ export default function Home() {
                           className="result-row"
                           onClick={() => dimScores.length > 0 && toggleExpandRow(rowKey)}
                           style={{
-                            borderTop: "1px solid var(--border)",
-                            background: i % 2 === 0 ? "var(--bg-panel)" : "var(--bg-secondary)",
+                            borderBottom: "1px solid var(--border)",
+                            background: "transparent",
                             cursor: dimScores.length > 0 ? "pointer" : "default",
+                            transition: "background 0.2s ease",
                           }}
                         >
                           {/* Rank */}
@@ -1305,21 +1320,23 @@ export default function Home() {
                               fontSize: "11px",
                               color: "var(--text-muted)",
                               fontVariantNumeric: "tabular-nums",
+                              fontWeight: 500,
+                              padding: "12px 16px"
                             }}
                           >
                             {String(i + 1).padStart(2, "0")}
                           </td>
 
                           {/* Name + Email */}
-                          <td>
+                          <td style={{ padding: "12px 16px" }}>
                             <div
                               style={{
                                 fontFamily: "var(--font-display)",
-                                fontWeight: 600,
-                                fontSize: "13px",
+                                fontWeight: 700,
+                                fontSize: "14px",
                                 color: "var(--text-primary)",
                                 letterSpacing: "-0.01em",
-                                marginBottom: "2px",
+                                marginBottom: "1px",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
                                 whiteSpace: "nowrap",
@@ -1332,7 +1349,7 @@ export default function Home() {
                                 fontFamily: "var(--font-mono)",
                                 fontSize: "10px",
                                 color: "var(--text-muted)",
-                                letterSpacing: "0.01em",
+                                opacity: 0.7,
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
                                 whiteSpace: "nowrap",
@@ -1343,18 +1360,18 @@ export default function Home() {
                           </td>
 
                           {/* Cohort */}
-                          <td style={{ textAlign: "center" }}>
+                          <td style={{ textAlign: "center", padding: "12px 16px" }}>
                             <span
                               style={{
                                 fontFamily: "var(--font-mono)",
                                 fontSize: "10px",
-                                fontWeight: 600,
+                                fontWeight: 700,
                                 letterSpacing: "0.08em",
-                                padding: "3px 8px",
-                                borderRadius: "3px",
-                                border: "1px solid var(--accent-border)",
+                                padding: "2px 8px",
+                                borderRadius: "4px",
+                                border: "1px solid rgba(249,104,70,0.2)",
                                 color: "var(--accent)",
-                                background: "var(--accent-dim)",
+                                background: "rgba(249,104,70,0.08)",
                               }}
                             >
                               {c.cohort}
@@ -1362,17 +1379,17 @@ export default function Home() {
                           </td>
 
                           {/* Score */}
-                          <td style={{ textAlign: "center" }}>
+                          <td style={{ textAlign: "center", padding: "12px 16px" }}>
                             <ScoreBadge score={c.score?.overall_score ?? 0} />
                           </td>
 
                           {/* Recommendation */}
-                          <td style={{ textAlign: "center" }}>
+                          <td style={{ textAlign: "center", padding: "12px 16px" }}>
                             <RecBadge rec={c.score?.recommendation ?? ""} />
                           </td>
 
-                          {/* Designation + Company */}
-                          <td>
+                          {/* Designation */}
+                          <td style={{ padding: "12px 16px" }}>
                             <div
                               style={{
                                 fontFamily: "var(--font-mono)",
@@ -1381,7 +1398,7 @@ export default function Home() {
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
                                 whiteSpace: "nowrap",
-                                marginBottom: "2px",
+                                fontWeight: 500
                               }}
                             >
                               {c.designation || "--"}
@@ -1389,14 +1406,15 @@ export default function Home() {
                             <div
                               style={{
                                 fontFamily: "var(--font-mono)",
-                                fontSize: "10px",
+                                fontSize: "9px",
                                 color: "var(--text-muted)",
+                                opacity: 0.6,
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
                                 whiteSpace: "nowrap",
                               }}
                             >
-                              {c.company || "--"}
+                              {c.company || ""}
                             </div>
                           </td>
 
@@ -1409,6 +1427,7 @@ export default function Home() {
                               color: "var(--text-secondary)",
                               whiteSpace: "nowrap",
                               fontVariantNumeric: "tabular-nums",
+                              padding: "12px 16px"
                             }}
                           >
                             {c.total_experience || "--"}

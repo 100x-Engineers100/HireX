@@ -69,9 +69,9 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        background: "rgba(0,0,0,0.85)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
+        background: "rgba(0,0,0,0.7)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -80,77 +80,81 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
     >
       <div
         style={{
-          background: "rgba(13,13,13,0.95)",
-          border: "1px solid rgba(249,104,70,0.15)",
-          borderRadius: "16px",
+          background: "rgba(10,10,10,0.4)",
+          border: "1px solid var(--border-strong)",
+          borderRadius: "20px",
           width: "100%",
-          maxWidth: "920px",
-          maxHeight: "90vh",
+          maxWidth: "960px",
+          maxHeight: "85vh",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
-          boxShadow: "0 0 0 1px rgba(255,255,255,0.04), 0 24px 64px rgba(0,0,0,0.7)",
-          backgroundImage: "linear-gradient(to bottom, rgba(249,104,70,0.04) 0px, transparent 60px)",
+          boxShadow: "0 32px 64px rgba(0,0,0,0.6)",
+          backdropFilter: "blur(32px) saturate(140%)",
         }}
       >
         {/* Modal header */}
         <div
           style={{
-            padding: "18px 24px",
-            borderBottom: "1px solid rgba(255,255,255,0.05)",
+            padding: "20px 28px",
+            borderBottom: "1px solid var(--border)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             flexShrink: 0,
+            background: "rgba(255,255,255,0.02)",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
             {/* Step pill */}
             <span
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "9px",
-                fontWeight: 600,
-                letterSpacing: "0.12em",
-                padding: "3px 10px",
-                borderRadius: "100px",
-                background: "rgba(249,104,70,0.1)",
+                fontWeight: 700,
+                letterSpacing: "0.15em",
+                padding: "4px 12px",
+                borderRadius: "6px",
+                background: "rgba(249,104,70,0.06)",
                 border: "1px solid rgba(249,104,70,0.25)",
                 color: "var(--accent)",
                 textTransform: "uppercase",
               }}
             >
-              Step 1 / 2
+              PHASE 01/02
             </span>
             <span
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "14px",
-                fontWeight: 700,
-                letterSpacing: "-0.02em",
+                fontSize: "16px",
+                fontWeight: 800,
+                letterSpacing: "-0.03em",
                 color: "var(--text-primary)",
               }}
             >
-              Confirm Parsed Criteria
+              Confirm Extraction
             </span>
           </div>
           <button
             onClick={onCancel}
             aria-label="Close"
             style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: "6px",
+              background: "transparent",
+              border: "1px solid var(--border-strong)",
+              borderRadius: "8px",
               color: "var(--text-muted)",
               cursor: "pointer",
               fontFamily: "var(--font-mono)",
               fontSize: "10px",
-              letterSpacing: "0.08em",
-              padding: "5px 12px",
-              transition: "border-color 0.15s ease, color 0.15s ease",
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              padding: "6px 14px",
+              transition: "all 0.2s ease",
             }}
+            onMouseOver={(e) => (e.currentTarget.style.borderColor = "var(--text-muted)")}
+            onMouseOut={(e) => (e.currentTarget.style.borderColor = "var(--border-strong)")}
           >
-            ESC
+            DISMISS
           </button>
         </div>
 
@@ -160,8 +164,8 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
           {/* Left: raw JD */}
           <div
             style={{
-              width: "38%",
-              borderRight: "1px solid rgba(255,255,255,0.05)",
+              width: "36%",
+              borderRight: "1px solid var(--border)",
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
@@ -169,39 +173,41 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
           >
             <div
               style={{
-                padding: "10px 16px",
-                borderBottom: "1px solid rgba(255,255,255,0.04)",
+                padding: "12px 20px",
+                borderBottom: "1px solid var(--border)",
                 flexShrink: 0,
                 display: "flex",
                 alignItems: "center",
-                gap: "8px",
+                gap: "10px",
+                background: "rgba(255,255,255,0.01)",
               }}
             >
-              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "var(--text-muted)" }} />
+              <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--text-muted)", opacity: 0.5 }} />
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "9px",
-                  fontWeight: 600,
-                  letterSpacing: "0.12em",
+                  fontWeight: 700,
+                  letterSpacing: "0.15em",
                   color: "var(--text-muted)",
                   textTransform: "uppercase",
                 }}
               >
-                original_jd.txt
+                RAW_SOURCE.TXT
               </span>
             </div>
-            <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
+            <div style={{ flex: 1, overflowY: "auto", padding: "24px", background: "rgba(0,0,0,0.1)" }}>
               <pre
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "11px",
                   color: "var(--text-muted)",
-                  lineHeight: 1.75,
+                  lineHeight: 1.8,
                   whiteSpace: "pre-wrap",
                   wordBreak: "break-word",
                   margin: 0,
-                  opacity: 0.7,
+                  opacity: 0.8,
+                  letterSpacing: "0.01em"
                 }}
               >
                 {rawJD}
@@ -213,100 +219,108 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
           <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             <div
               style={{
-                padding: "10px 20px",
-                borderBottom: "1px solid rgba(255,255,255,0.04)",
+                padding: "12px 24px",
+                borderBottom: "1px solid var(--border)",
                 flexShrink: 0,
                 display: "flex",
                 alignItems: "center",
-                gap: "8px",
+                gap: "10px",
+                background: "rgba(255,255,255,0.01)",
               }}
             >
-              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 6px var(--accent)" }} />
+              <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--accent)", boxShadow: "0 0 10px var(--accent)" }} />
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "9px",
-                  fontWeight: 600,
-                  letterSpacing: "0.12em",
-                  color: "var(--accent)",
+                  fontWeight: 700,
+                  letterSpacing: "0.15em",
+                  color: "var(--text-primary)",
                   textTransform: "uppercase",
                 }}
               >
-                Parsed Criteria &mdash; edit as needed
+                MANUAL_VERIFICATION
               </span>
             </div>
             <div
               style={{
                 flex: 1,
                 overflowY: "auto",
-                padding: "20px",
+                padding: "24px 32px",
                 display: "flex",
                 flexDirection: "column",
-                gap: "18px",
+                gap: "24px",
               }}
             >
-              <FieldGroup label="Role Title">
+              <FieldGroup label="Role Identity">
                 <input type="text" value={edited.role_title}
                   onChange={(e) => setEdited((p) => ({ ...p, role_title: e.target.value }))}
                   style={inputStyle}
+                  placeholder="e.g. Senior Software Engineer"
                 />
               </FieldGroup>
 
-              <FieldGroup label="Experience Range (years)">
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <input
-                    type="number" min={0} max={20} value={edited.min_years_experience}
-                    onChange={(e) => setEdited((p) => {
-                      const min = parseInt(e.target.value) || 0;
-                      return { ...p, min_years_experience: min, experience_buckets_acceptable: syncBuckets(min, p.max_years_experience) };
-                    })}
-                    style={{ ...inputStyle, width: "90px" }}
-                    placeholder="Min"
-                  />
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--text-muted)" }}>to</span>
-                  <input
-                    type="number" min={0} max={30} value={edited.max_years_experience}
-                    onChange={(e) => setEdited((p) => {
-                      const max = parseInt(e.target.value) || 0;
-                      return { ...p, max_years_experience: max, experience_buckets_acceptable: syncBuckets(p.min_years_experience, max) };
-                    })}
-                    style={{ ...inputStyle, width: "90px" }}
-                    placeholder="No cap (0)"
-                  />
+              <FieldGroup label="Experience Threshold">
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <div style={{ position: "relative", flex: 1 }}>
+                    <input
+                      type="number" min={0} max={20} value={edited.min_years_experience}
+                      onChange={(e) => setEdited((p) => {
+                        const min = parseInt(e.target.value) || 0;
+                        return { ...p, min_years_experience: min, experience_buckets_acceptable: syncBuckets(min, p.max_years_experience) };
+                      })}
+                      style={{ ...inputStyle, paddingLeft: "32px" }}
+                    />
+                    <span style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", fontSize: "10px", color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>MIN</span>
+                  </div>
+                  <div style={{ width: "8px", height: "1px", background: "var(--border-strong)" }} />
+                  <div style={{ position: "relative", flex: 1 }}>
+                    <input
+                      type="number" min={0} max={30} value={edited.max_years_experience}
+                      onChange={(e) => setEdited((p) => {
+                        const max = parseInt(e.target.value) || 0;
+                        return { ...p, max_years_experience: max, experience_buckets_acceptable: syncBuckets(p.min_years_experience, max) };
+                      })}
+                      style={{ ...inputStyle, paddingLeft: "32px" }}
+                    />
+                    <span style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", fontSize: "10px", color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>MAX</span>
+                  </div>
                   {edited.max_years_experience === 0 && (
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "9px", color: "var(--text-muted)", letterSpacing: "0.08em" }}>NO CAP</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "9px", color: "var(--accent)", fontWeight: 700, letterSpacing: "0.1em" }}>UNLIMITED</span>
                   )}
                 </div>
               </FieldGroup>
 
-              <FieldGroup label="Required Domain">
+              <FieldGroup label="Domain Sector">
                 <select
                   value={edited.required_domain}
                   onChange={(e) => setEdited((p) => ({ ...p, required_domain: e.target.value as JDCriteria["required_domain"] }))}
-                  style={{ ...inputStyle, cursor: "pointer" }}
+                  style={{ ...inputStyle, cursor: "pointer", appearance: "none" }}
                 >
                   {domainOptions.map((d) => (
-                    <option key={d} value={d} style={{ background: "#111", color: "#fff" }}>{d}</option>
+                    <option key={d} value={d} style={{ background: "#111", color: "#fff" }}>{d.toUpperCase()}</option>
                   ))}
                 </select>
               </FieldGroup>
 
-              <FieldGroup label="Required Skills">
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "10px" }}>
+              <FieldGroup label="Skill requirements">
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "12px" }}>
                   {edited.required_skills.map((skill) => (
                     <span
                       key={skill}
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
-                        gap: "6px",
-                        padding: "4px 10px",
-                        borderRadius: "6px",
+                        gap: "8px",
+                        padding: "4px 12px",
+                        borderRadius: "8px",
                         border: "1px solid rgba(249,104,70,0.2)",
-                        background: "rgba(249,104,70,0.07)",
+                        background: "rgba(249,104,70,0.06)",
                         fontFamily: "var(--font-mono)",
                         fontSize: "11px",
+                        fontWeight: 600,
                         color: "var(--accent)",
+                        transition: "all 0.2s ease",
                       }}
                     >
                       {skill}
@@ -317,23 +331,25 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
                           background: "none",
                           border: "none",
                           cursor: "pointer",
-                          color: "rgba(249,104,70,0.5)",
+                          color: "rgba(249,104,70,0.4)",
                           padding: 0,
                           fontFamily: "var(--font-mono)",
-                          fontSize: "13px",
+                          fontSize: "14px",
                           lineHeight: 1,
-                          transition: "color 0.15s ease",
+                          marginTop: "-1px"
                         }}
+                        onMouseOver={(e) => (e.currentTarget.style.color = "var(--accent)")}
+                        onMouseOut={(e) => (e.currentTarget.style.color = "rgba(249,104,70,0.4)")}
                       >
-                        x
+                        ×
                       </button>
                     </span>
                   ))}
                 </div>
-                <div style={{ display: "flex", gap: "8px" }}>
+                <div style={{ display: "flex", gap: "10px" }}>
                   <input
                     type="text"
-                    placeholder="Add skill, press Enter"
+                    placeholder="Type skill & press Enter"
                     value={newSkill}
                     onChange={(e) => setNewSkill(e.target.value)}
                     onKeyDown={handleSkillKeyDown}
@@ -344,30 +360,32 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
                     style={{
                       fontFamily: "var(--font-display)",
                       fontSize: "11px",
-                      fontWeight: 600,
-                      padding: "7px 16px",
-                      borderRadius: "6px",
-                      border: "1px solid rgba(249,104,70,0.25)",
+                      fontWeight: 800,
+                      padding: "8px 18px",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(249,104,70,0.3)",
                       background: "rgba(249,104,70,0.08)",
                       color: "var(--accent)",
                       cursor: "pointer",
-                      letterSpacing: "0.04em",
-                      transition: "background 0.15s ease",
+                      letterSpacing: "0.06em",
+                      transition: "all 0.2s ease",
                     }}
+                    onMouseOver={(e) => (e.currentTarget.style.background = "rgba(249,104,70,0.15)")}
+                    onMouseOut={(e) => (e.currentTarget.style.background = "rgba(249,104,70,0.08)")}
                   >
-                    + Add
+                    APPEND
                   </button>
                 </div>
               </FieldGroup>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <ToggleField
-                  label="Technical Role"
+                  label="Is this a technical/engineering role?"
                   checked={edited.is_technical_role}
                   onChange={(v) => setEdited((p) => ({ ...p, is_technical_role: v }))}
                 />
                 <ToggleField
-                  label="Requires Work Experience"
+                  label="Does it require prior work experience?"
                   checked={edited.requires_working_experience}
                   onChange={(v) => setEdited((p) => ({ ...p, requires_working_experience: v }))}
                 />
@@ -379,14 +397,14 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
         {/* Footer */}
         <div
           style={{
-            padding: "16px 24px",
-            borderTop: "1px solid rgba(255,255,255,0.05)",
+            padding: "20px 28px",
+            borderTop: "1px solid var(--border)",
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-end",
-            gap: "10px",
+            gap: "12px",
             flexShrink: 0,
-            background: "rgba(255,255,255,0.01)",
+            background: "rgba(255,255,255,0.02)",
           }}
         >
           <button
@@ -394,17 +412,20 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "11px",
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-              padding: "9px 20px",
-              borderRadius: "8px",
-              border: "1px solid rgba(255,255,255,0.08)",
+              fontWeight: 700,
+              letterSpacing: "0.05em",
+              padding: "10px 22px",
+              borderRadius: "10px",
+              border: "1px solid var(--border-strong)",
               background: "rgba(255,255,255,0.03)",
               color: "var(--text-secondary)",
               cursor: "pointer",
+              transition: "all 0.2s ease"
             }}
+            onMouseOver={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
+            onMouseOut={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.03)")}
           >
-            Cancel
+            DISCARD
           </button>
           <button
             onClick={() => onConfirm(edited)}
@@ -412,20 +433,21 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.04em",
-              padding: "9px 24px",
-              borderRadius: "8px",
+              fontWeight: 800,
+              letterSpacing: "0.08em",
+              padding: "11px 28px",
+              borderRadius: "10px",
               border: "none",
               background: "var(--accent)",
               color: "#000",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "10px",
+              boxShadow: "0 4px 16px rgba(249,104,70,0.3)"
             }}
           >
-            Confirm Criteria
+            CONFIRM & CONTINUE
             <SendIcon size={14} color="#000" controlled={false} />
           </button>
         </div>
@@ -439,14 +461,16 @@ export default function JDConfirmModal({ rawJD, criteria, onConfirm, onCancel }:
 const inputStyle: React.CSSProperties = {
   fontFamily: "var(--font-mono)",
   fontSize: "12px",
+  fontWeight: 500,
   color: "var(--text-primary)",
   background: "rgba(255,255,255,0.03)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "6px",
-  padding: "8px 12px",
+  border: "1px solid var(--border-strong)",
+  borderRadius: "8px",
+  padding: "10px 14px",
   outline: "none",
   width: "100%",
-  transition: "border-color 0.15s ease",
+  transition: "all 0.2s ease",
+  caretColor: "var(--accent)"
 };
 
 function FieldGroup({ label, children }: { label: string; children: React.ReactNode }) {
@@ -457,11 +481,12 @@ function FieldGroup({ label, children }: { label: string; children: React.ReactN
           display: "block",
           fontFamily: "var(--font-mono)",
           fontSize: "9px",
-          fontWeight: 600,
-          letterSpacing: "0.14em",
+          fontWeight: 800,
+          letterSpacing: "0.2em",
           color: "var(--text-muted)",
           textTransform: "uppercase",
-          marginBottom: "7px",
+          marginBottom: "10px",
+          opacity: 0.8
         }}
       >
         {label}
@@ -484,19 +509,20 @@ function ToggleField({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "11px 14px",
-        borderRadius: "8px",
-        border: checked ? "1px solid rgba(249,104,70,0.2)" : "1px solid rgba(255,255,255,0.06)",
-        background: checked ? "rgba(249,104,70,0.05)" : "rgba(255,255,255,0.02)",
-        transition: "background 0.2s ease, border-color 0.2s ease",
+        padding: "12px 16px",
+        borderRadius: "10px",
+        border: checked ? "1px solid rgba(249,104,70,0.25)" : "1px solid var(--border)",
+        background: checked ? "rgba(249,104,70,0.06)" : "rgba(255,255,255,0.02)",
+        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
       }}
     >
       <span
         style={{
           fontFamily: "var(--font-display)",
-          fontSize: "12px",
-          fontWeight: 500,
+          fontSize: "13px",
+          fontWeight: 600,
           color: checked ? "var(--text-primary)" : "var(--text-secondary)",
+          opacity: checked ? 1 : 0.7
         }}
       >
         {label}
@@ -506,28 +532,28 @@ function ToggleField({
         aria-checked={checked}
         onClick={() => onChange(!checked)}
         style={{
-          width: "38px",
+          width: "40px",
           height: "22px",
-          borderRadius: "11px",
+          borderRadius: "100px",
           border: "none",
           background: checked ? "var(--accent)" : "rgba(255,255,255,0.1)",
           cursor: "pointer",
           position: "relative",
-          transition: "background 0.2s ease",
+          transition: "all 0.3s ease",
           flexShrink: 0,
-          boxShadow: checked ? "0 0 10px rgba(249,104,70,0.3)" : "none",
+          boxShadow: checked ? "0 0 12px rgba(249,104,70,0.25)" : "none",
         }}
       >
         <span
           style={{
             position: "absolute",
             top: "3px",
-            left: checked ? "18px" : "3px",
+            left: checked ? "21px" : "3px",
             width: "16px",
             height: "16px",
             borderRadius: "50%",
             background: checked ? "#000" : "var(--text-muted)",
-            transition: "left 0.2s ease",
+            transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
           }}
         />
       </button>
